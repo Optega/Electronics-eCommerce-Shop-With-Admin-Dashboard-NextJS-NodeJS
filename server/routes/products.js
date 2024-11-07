@@ -8,10 +8,11 @@ const {
   deleteProduct,
   searchProducts,
   getProductById,
+  getMinMaxPrices,
 } = require("../controllers/products");
 
 router.route("/").get(getAllProducts).post(createProduct);
-
+router.route("/min-max-prices").get(getMinMaxPrices);
 
 router
   .route("/:id")
