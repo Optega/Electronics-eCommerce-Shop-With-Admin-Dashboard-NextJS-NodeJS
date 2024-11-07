@@ -1,109 +1,109 @@
 export const categoryMenuList = [
   {
     id: 1,
-    title: "Smart Phones",
+    title: "Телефони",
     src: "/smart phone icon.png",
-    href: "/shop/smart-phones"
+    href: "/shop/smart-phones",
   },
   {
     id: 2,
-    title: "Tablets",
+    title: "Планшети",
     src: "/tablet icon.png",
-    href: "/shop/tablets"
+    href: "/shop/tablets",
   },
   {
     id: 3,
-    title: "Mouses",
+    title: "Мишки",
     src: "/mouse icon.png",
-    href: "/shop/mouses"
+    href: "/shop/mouses",
   },
   {
     id: 4,
-    title: "Cameras",
+    title: "Камери",
     src: "/camera icon.png",
-    href: "/shop/cameras"
+    href: "/shop/cameras",
   },
   {
     id: 5,
-    title: "Smart Watches",
+    title: "Годинники",
     src: "/smart watch.png",
-    href: "/shop/watches"
+    href: "/shop/watches",
   },
   {
     id: 6,
-    title: "Laptops",
+    title: "Ноутбуки",
     src: "/laptop icon.png",
-    href: "/shop/laptops"
+    href: "/shop/laptops",
   },
   {
     id: 7,
-    title: "PCs",
+    title: "ПК",
     src: "/pc icon.png",
-    href: "/shop/computers"
+    href: "/shop/computers",
   },
   {
     id: 8,
-    title: "Printers",
+    title: "Принтери",
     src: "/printers icon.png",
-    href: "/shop/printers"
+    href: "/shop/printers",
   },
   {
     id: 9,
-    title: "Earbuds",
+    title: "Навушники",
     src: "/ear buds icon.png",
-    href: "/shop/earbuds"
+    href: "/shop/earbuds",
   },
   {
     id: 10,
-    title: "Head Phones",
+    title: "Навушники",
     src: "/headphone icon.png",
-    href: "/shop/headphones"
+    href: "/shop/headphones",
   },
 ];
 
 export const incentives = [
   {
-    name: "Free Shipping",
+    name: "Безкоштовна доставка",
     description:
-      "Our shipping is completely free and that is completely good for our customers.",
+      "Наша доставка абсолютно безкоштовна і це дуже подобається нашим клієнтам.",
     imageSrc: "/shipping icon.png",
   },
   {
-    name: "24/7 Customer Support",
+    name: "Підтримка клієнтів 24/7",
     description:
-      "Our support is working all day and night to answer any question you have.",
+      "Наша підтримка працює цілодобово, щоб відповісти на будь-яке ваше запитання.",
     imageSrc: "/support icon.png",
   },
   {
-    name: "Fast Shopping Cart",
+    name: "Швидкий кошик для покупок",
     description:
-      "We have super fast shopping experience and you will enjoy it.",
+      "Ми маємо надзвичайно швидкий досвід покупок, і вам це сподобається.",
     imageSrc: "/fast shopping icon.png",
   },
 ];
 
 export const navigation = {
   sale: [
-    { name: "Discounts", href: "#" },
-    { name: "News", href: "#" },
-    { name: "Register Discounts", href: "#" },
+    { name: "Новини", href: "#" },
+    { name: "Знижки", href: "#" },
+    { name: "Акції", href: "#" },
   ],
   about: [
-    { name: "About Singitronic", href: "#" },
-    { name: "Work With Us", href: "#" },
-    { name: "Company Profile", href: "#" },
+    { name: "Про RadioTech", href: "#" },
+    { name: "Працюйте з нами", href: "#" },
+    { name: "Профіль компанії", href: "#" },
   ],
   buy: [
-    { name: "Singitronic Loyalty Card", href: "#" },
-    { name: "Terms Of Use", href: "#" },
-    { name: "Privacy Policy", href: "#" },
-    { name: "Complaints", href: "#" },
-    { name: "Partners", href: "#" },
+    { name: "Карта лояльності RadioTech", href: "#" },
+    { name: "Умови використання", href: "#" },
+    { name: "Політика конфіденційності", href: "#" },
+    { name: "Скарги", href: "#" },
+    { name: "Партнери", href: "#" },
   ],
   help: [
-    { name: "Contact", href: "#" },
-    { name: "How to Buy at Singitronic", href: "#" },
-    { name: "FAQ", href: "#" },
+    { name: "Контакти", href: "#" },
+    { name: "Як купувати в RadioTech", href: "#" },
+    { name: "Часті питання", href: "#" },
   ],
 };
 
@@ -125,7 +125,7 @@ export const isValidCardNumber = (input: string) => {
   // test for credit card number between 13 and 19 characters
   const regex = /^\d{13,19}$/;
   return regex.test(cleanedInput);
-}
+};
 
 export const isValidCreditCardExpirationDate = (input: string) => {
   // simple expiration date format check

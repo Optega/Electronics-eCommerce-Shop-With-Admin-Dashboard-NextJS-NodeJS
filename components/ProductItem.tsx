@@ -1,5 +1,5 @@
 // *********************
-// Role of the component: Product item component 
+// Role of the component: Product item component
 // Name of the component: ProductItem.tsx
 // Developer: Aleksandar Kuzmanovic
 // Version: 1.0
@@ -61,7 +61,7 @@ const ProductItem = ({
         href={`/product/${product?.slug}`}
         className="block flex justify-center items-center w-full uppercase bg-white px-0 py-2 text-base border border-black border-gray-300 font-bold text-blue-600 shadow-sm hover:bg-black hover:bg-gray-100 focus:outline-none focus:ring-2"
       >
-        <p>View product</p>
+        <p>Переглянути товар</p>
       </Link>
     </div>
   );

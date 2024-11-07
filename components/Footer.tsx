@@ -21,18 +21,36 @@ const Footer = () => {
         </h2>
         <div className="mx-auto max-w-screen-2xl px-6 lg:px-8 pt-24 pb-14">
           <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-            <Image
-              src="/logo v1.png"
-              alt="Singitronic logo"
-              width={250}
-              height={250}
-              className="h-auto w-auto"
-            />
+            <div className="flex flex-col justify-between items-center sm:flex-row">
+              <Image
+                src="/images/logo/RadioTech.png"
+                width={250}
+                height={250}
+                alt="RadioTech logo"
+                className="h-auto w-auto"
+              />
+              <div className="flex flex-row">
+                <Image
+                  src="/images/logo/visa-logo.svg"
+                  width={40}
+                  height={40}
+                  alt="visa logo"
+                  className="h-[40px] w-auto"
+                />
+                <Image
+                  src="/images/logo/mastercard-logo.svg"
+                  width={40}
+                  height={40}
+                  alt="mastercard logo"
+                  className="h-[40px] w-auto"
+                />
+              </div>
+            </div>
             <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
                   <h3 className="text-lg font-bold leading-6 text-blue-600">
-                    Sale
+                    Магазин
                   </h3>
                   <ul role="list" className="mt-6 space-y-4">
                     {navigation.sale.map((item) => (
@@ -49,7 +67,7 @@ const Footer = () => {
                 </div>
                 <div className="mt-10 md:mt-0">
                   <h3 className="text-base font-bold leading-6 text-blue-600">
-                    About Us
+                    Про нас
                   </h3>
                   <ul role="list" className="mt-6 space-y-4">
                     {navigation.about.map((item) => (
@@ -68,7 +86,7 @@ const Footer = () => {
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
                   <h3 className="text-base font-bold leading-6 text-blue-600">
-                    Buying
+                    Покупка
                   </h3>
                   <ul role="list" className="mt-6 space-y-4">
                     {navigation.buy.map((item) => (
@@ -85,7 +103,7 @@ const Footer = () => {
                 </div>
                 <div className="mt-10 md:mt-0">
                   <h3 className="text-base font-bold leading-6 text-blue-600">
-                    Support
+                    Підтримка
                   </h3>
                   <ul role="list" className="mt-6 space-y-4">
                     {navigation.help.map((item) => (
