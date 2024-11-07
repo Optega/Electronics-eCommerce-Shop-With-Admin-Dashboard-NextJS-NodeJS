@@ -66,3 +66,5 @@ npm run dev
 ```
 
 <p>14. Open <a href="http://localhost:3000" target="_blank">http://localhost:3000</a> and see it live!</p>
+<h2>Original Author</h2>
+<p>This project was created by <a href="https://github.com/Kuzma02/Electronics-eCommerce-Shop-With-Admin-Dashboard-NextJS-NodeJS" target="_blank">Kuzma02</a>.</p>
