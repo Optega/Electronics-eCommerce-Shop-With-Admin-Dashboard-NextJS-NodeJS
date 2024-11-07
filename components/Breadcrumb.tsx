@@ -1,5 +1,5 @@
 // *********************
-// Role of the component: Component that displays current page location in the application 
+// Role of the component: Component that displays current page location in the application
 // Name of the component: Breadcrumb.tsx
 // Developer: Aleksandar Kuzmanovic
 // Version: 1.0
@@ -19,14 +19,14 @@ const Breadcrumb = () => {
         <li>
           <Link href="/">
             <FaHouse className="mr-2" />
-            Home
+            Головна
           </Link>
         </li>
         <li>
-          <Link href="/shop">Shop</Link>
+          <Link href="/shop">Каталог</Link>
         </li>
         <li>
-          <Link href="/shop">All products</Link>
+          <Link href="/shop">Всі товари</Link>
         </li>
       </ul>
     </div>

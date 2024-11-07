@@ -18,21 +18,21 @@ const Products = async ({ slug }: any) => {
   const page = slug?.searchParams?.page ? Number(slug?.searchParams?.page) : 1;
 
   let stockMode: string = "lte";
-  
+
   // preparing inStock and out of stock filter for GET request
   // If in stock checkbox is checked, stockMode is "equals"
   if (inStockNum === 1) {
     stockMode = "equals";
   }
- // If out of stock checkbox is checked, stockMode is "lt"
+  // If out of stock checkbox is checked, stockMode is "lt"
   if (outOfStockNum === 1) {
     stockMode = "lt";
   }
-   // If in stock and out of stock checkboxes are checked, stockMode is "lte"
+  // If in stock and out of stock checkboxes are checked, stockMode is "lte"
   if (inStockNum === 1 && outOfStockNum === 1) {
     stockMode = "lte";
   }
-   // If in stock and out of stock checkboxes aren't checked, stockMode is "gt"
+  // If in stock and out of stock checkboxes aren't checked, stockMode is "gt"
   if (inStockNum === 0 && outOfStockNum === 0) {
     stockMode = "gt";
   }
@@ -70,7 +70,7 @@ const Products = async ({ slug }: any) => {
         ))
       ) : (
         <h3 className="text-3xl mt-5 text-center w-full col-span-full max-[1000px]:text-2xl max-[500px]:text-lg">
-          No products found for specified query
+          Немає товарів за вибраними фільтрами
         </h3>
       )}
     </div>
