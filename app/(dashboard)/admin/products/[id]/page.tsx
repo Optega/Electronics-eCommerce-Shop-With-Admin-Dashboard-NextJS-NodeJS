@@ -54,7 +54,9 @@ const DashboardProductDetails = ({
       product?.slug === "" ||
       product?.price.toString() === "" ||
       product?.manufacturer === "" ||
-      product?.description === ""
+      product?.description === "" ||
+      product?.sku === "" ||
+      product?.reviewsCount.toString() === ""
     ) {
       toast.error("You need to enter values in input fields");
       return;
@@ -148,7 +150,7 @@ const DashboardProductDetails = ({
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
-              value={product?.title}
+              value={product?.title || ""}
               onChange={(e) =>
                 setProduct({ ...product!, title: e.target.value })
               }
@@ -166,7 +168,7 @@ const DashboardProductDetails = ({
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
-              value={product?.price}
+              value={product?.price || "0"}
               onChange={(e) =>
                 setProduct({ ...product!, price: Number(e.target.value) })
               }
@@ -183,7 +185,7 @@ const DashboardProductDetails = ({
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
-              value={product?.manufacturer}
+              value={product?.manufacturer || ""}
               onChange={(e) =>
                 setProduct({ ...product!, manufacturer: e.target.value })
               }
@@ -201,7 +203,9 @@ const DashboardProductDetails = ({
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
-              value={product?.slug && convertSlugToURLFriendly(product?.slug)}
+              value={
+                (product?.slug && convertSlugToURLFriendly(product?.slug)) || ""
+              }
               onChange={(e) =>
                 setProduct({
                   ...product!,
@@ -221,7 +225,7 @@ const DashboardProductDetails = ({
             </div>
             <select
               className="select select-bordered"
-              value={product?.inStock}
+              value={product?.inStock || 1}
               onChange={(e) => {
                 setProduct({ ...product!, inStock: Number(e.target.value) });
               }}
@@ -240,7 +244,7 @@ const DashboardProductDetails = ({
             </div>
             <select
               className="select select-bordered"
-              value={product?.categoryId}
+              value={product?.categoryId || categories?.[0]?.id}
               onChange={(e) =>
                 setProduct({
                   ...product!,
@@ -259,13 +263,50 @@ const DashboardProductDetails = ({
         </div>
         {/* Product category select input div - end */}
 
+        {/* Product sku input div - start */}
+        <div>
+          <label className="form-control w-full max-w-xs">
+            <div className="label">
+              <span className="label-text">Product SKU:</span>
+            </div>
+            <input
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              value={product?.sku || ""}
+              onChange={(e) => setProduct({ ...product!, sku: e.target.value })}
+            />
+          </label>
+        </div>
+        {/* Product sku input div - end */}
+
+        {/* Product review count input div - start */}
+        <div>
+          <label className="form-control w-full max-w-xs">
+            <div className="label">
+              <span className="label-text">Product review count:</span>
+            </div>
+            <input
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              value={product?.reviewsCount || "0"}
+              onChange={(e) =>
+                setProduct({
+                  ...product!,
+                  reviewsCount: Number(e.target.value),
+                })
+              }
+            />
+          </label>
+        </div>
+        {/* Product review count input div - end */}
+
         {/* Main image file upload div - start */}
         <div>
           <input
             type="file"
             className="file-input file-input-bordered file-input-lg w-full max-w-sm"
             onChange={(e) => {
-              const selectedFile = e.target.files[0];
+              const selectedFile = e.target.files ? e.target.files[0] : null;
 
               if (selectedFile) {
                 uploadFile(selectedFile);
@@ -307,7 +348,7 @@ const DashboardProductDetails = ({
             </div>
             <textarea
               className="textarea textarea-bordered h-24"
-              value={product?.description}
+              value={product?.description || ""}
               onChange={(e) =>
                 setProduct({ ...product!, description: e.target.value })
               }
@@ -315,6 +356,102 @@ const DashboardProductDetails = ({
           </label>
         </div>
         {/* Product description div - end */}
+
+        {/* Product attributes div - start */}
+        <div>
+          <div className="label">
+            <span className="label-text">Product attributes:</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="table text-xl text-center max-[500px]:text-base">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Value</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {product?.attributes &&
+                  product.attributes.map((attribute, index) => (
+                    <tr key={index}>
+                      <th>
+                        <input
+                          type="text"
+                          className="input input-bordered w-full max-w-xs"
+                          value={attribute.name || ""}
+                          onChange={(e) => {
+                            setProduct({
+                              ...product!,
+                              attributes: product.attributes.map((attr) =>
+                                attr.name === attribute.name
+                                  ? { ...attr, name: e.target.value }
+                                  : attr
+                              ),
+                            });
+                          }}
+                        />
+                      </th>
+                      <td>
+                        <input
+                          type="text"
+                          className="input input-bordered w-full max-w-xs"
+                          value={attribute.value || ""}
+                          onChange={(e) => {
+                            setProduct({
+                              ...product!,
+                              attributes: product.attributes.map((attr) =>
+                                attr.name === attribute.name
+                                  ? { ...attr, value: e.target.value }
+                                  : attr
+                              ),
+                            });
+                          }}
+                        />
+                      </td>
+                      <td>
+                        <button
+                          className="uppercase bg-red-600 p-2 text-lg border border-black border-gray-300 font-bold text-white shadow-sm hover:bg-red-700 hover:text-white focus:outline-none focus:ring-2"
+                          onClick={() => {
+                            setProduct({
+                              ...product!,
+                              attributes: product.attributes.filter(
+                                (attr) => attr.name !== attribute.name
+                              ),
+                            });
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <button
+                      className="uppercase bg-blue-500 p-2 text-lg border border-black border-gray-300 font-bold text-white shadow-sm hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2"
+                      onClick={() =>
+                        setProduct({
+                          ...product!,
+                          attributes: [
+                            ...(product?.attributes || []),
+                            { name: "", value: "" },
+                          ],
+                        })
+                      }
+                    >
+                      Add
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {/* Product attributes div - end */}
+
         {/* Action buttons div - start */}
         <div className="flex gap-x-2 max-sm:flex-col">
           <button

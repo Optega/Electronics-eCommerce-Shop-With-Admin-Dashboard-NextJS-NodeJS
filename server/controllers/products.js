@@ -254,6 +254,9 @@ async function createProduct(request, response) {
       manufacturer,
       categoryId,
       inStock,
+      sku,
+      reviewsCount,
+      attributes,
     } = request.body;
     const product = await prisma.product.create({
       data: {
@@ -261,11 +264,14 @@ async function createProduct(request, response) {
         title,
         mainImage,
         price,
-        rating: 5,
+        rating: 0,
         description,
         manufacturer,
         categoryId,
         inStock,
+        sku,
+        reviewsCount,
+        attributes,
       },
     });
     return response.status(201).json(product);
@@ -289,6 +295,9 @@ async function updateProduct(request, response) {
       manufacturer,
       categoryId,
       inStock,
+      sku,
+      reviewsCount,
+      attributes,
     } = request.body;
     // Finding a product by slug
     const existingProduct = await prisma.product.findUnique({
@@ -316,6 +325,9 @@ async function updateProduct(request, response) {
         manufacturer: manufacturer,
         categoryId: categoryId,
         inStock: inStock,
+        sku: sku,
+        reviewsCount: reviewsCount,
+        attributes: attributes,
       },
     });
 

@@ -15,6 +15,9 @@ const AddNewProduct = () => {
     description: string;
     slug: string;
     categoryId: string;
+    sku: string;
+    reviewsCount: number;
+    attributes: Attribute[];
   }>({
     title: "",
     price: 0,
@@ -24,15 +27,21 @@ const AddNewProduct = () => {
     description: "",
     slug: "",
     categoryId: "",
+    sku: "",
+    reviewsCount: 0,
+    attributes: [],
   });
   const [categories, setCategories] = useState<Category[]>([]);
 
   const addProduct = async () => {
     if (
       product.title === "" ||
+      product.slug === "" ||
+      product.price.toString() === "" ||
       product.manufacturer === "" ||
-      product.description == "" ||
-      product.slug === ""
+      product.description === "" ||
+      product.sku === "" ||
+      product.reviewsCount.toString() === ""
     ) {
       toast.error("Please enter values in input fields");
       return;
@@ -62,6 +71,9 @@ const AddNewProduct = () => {
           description: "",
           slug: "",
           categoryId: "",
+          sku: "",
+          reviewsCount: 0,
+          attributes: [],
         });
       })
       .catch((error) => {
@@ -105,6 +117,9 @@ const AddNewProduct = () => {
           description: "",
           slug: "",
           categoryId: data[0]?.id,
+          sku: "",
+          reviewsCount: 0,
+          attributes: [],
         });
       });
   };
@@ -126,9 +141,41 @@ const AddNewProduct = () => {
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
-              value={product?.title}
+              value={product?.title || ""}
               onChange={(e) =>
                 setProduct({ ...product, title: e.target.value })
+              }
+            />
+          </label>
+        </div>
+
+        <div>
+          <label className="form-control w-full max-w-xs">
+            <div className="label">
+              <span className="label-text">Product price:</span>
+            </div>
+            <input
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              value={product?.price || "0"}
+              onChange={(e) =>
+                setProduct({ ...product, price: Number(e.target.value) })
+              }
+            />
+          </label>
+        </div>
+
+        <div>
+          <label className="form-control w-full max-w-xs">
+            <div className="label">
+              <span className="label-text">Manufacturer:</span>
+            </div>
+            <input
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              value={product?.manufacturer || ""}
+              onChange={(e) =>
+                setProduct({ ...product, manufacturer: e.target.value })
               }
             />
           </label>
@@ -142,7 +189,9 @@ const AddNewProduct = () => {
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
-              value={convertSlugToURLFriendly(product?.slug)}
+              value={
+                (product?.slug && convertSlugToURLFriendly(product?.slug)) || ""
+              }
               onChange={(e) =>
                 setProduct({
                   ...product,
@@ -156,11 +205,29 @@ const AddNewProduct = () => {
         <div>
           <label className="form-control w-full max-w-xs">
             <div className="label">
+              <span className="label-text">Is product in stock?</span>
+            </div>
+            <select
+              className="select select-bordered"
+              value={product?.inStock || 1}
+              onChange={(e) =>
+                setProduct({ ...product, inStock: Number(e.target.value) })
+              }
+            >
+              <option value={1}>Yes</option>
+              <option value={0}>No</option>
+            </select>
+          </label>
+        </div>
+
+        <div>
+          <label className="form-control w-full max-w-xs">
+            <div className="label">
               <span className="label-text">Category:</span>
             </div>
             <select
               className="select select-bordered"
-              value={product?.categoryId}
+              value={product?.categoryId || categories[0]?.id}
               onChange={(e) =>
                 setProduct({ ...product, categoryId: e.target.value })
               }
@@ -178,50 +245,33 @@ const AddNewProduct = () => {
         <div>
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">Product price:</span>
+              <span className="label-text">Product SKU:</span>
             </div>
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
-              value={product?.price}
-              onChange={(e) =>
-                setProduct({ ...product, price: Number(e.target.value) })
-              }
+              value={product?.sku || ""}
+              onChange={(e) => setProduct({ ...product, sku: e.target.value })}
             />
           </label>
         </div>
+
         <div>
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">Manufacturer:</span>
+              <span className="label-text">Product review count:</span>
             </div>
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
-              value={product?.manufacturer}
+              value={product?.reviewsCount || "0"}
               onChange={(e) =>
-                setProduct({ ...product, manufacturer: e.target.value })
+                setProduct({ ...product, reviewsCount: Number(e.target.value) })
               }
             />
           </label>
         </div>
-        <div>
-          <label className="form-control w-full max-w-xs">
-            <div className="label">
-              <span className="label-text">Is product in stock?</span>
-            </div>
-            <select
-              className="select select-bordered"
-              value={product?.inStock}
-              onChange={(e) =>
-                setProduct({ ...product, inStock: Number(e.target.value) })
-              }
-            >
-              <option value={1}>Yes</option>
-              <option value={0}>No</option>
-            </select>
-          </label>
-        </div>
+
         <div>
           <input
             type="file"
@@ -255,6 +305,100 @@ const AddNewProduct = () => {
             ></textarea>
           </label>
         </div>
+
+        <div>
+          <div className="label">
+            <span className="label-text">Product attributes:</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="table text-xl text-center max-[500px]:text-base">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Value</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {product?.attributes &&
+                  product.attributes.map((attribute, index) => (
+                    <tr key={index}>
+                      <th>
+                        <input
+                          type="text"
+                          className="input input-bordered w-full max-w-xs"
+                          value={attribute.name || ""}
+                          onChange={(e) => {
+                            setProduct({
+                              ...product!,
+                              attributes: product.attributes.map((attr) =>
+                                attr.name === attribute.name
+                                  ? { ...attr, name: e.target.value }
+                                  : attr
+                              ),
+                            });
+                          }}
+                        />
+                      </th>
+                      <td>
+                        <input
+                          type="text"
+                          className="input input-bordered w-full max-w-xs"
+                          value={attribute.value || ""}
+                          onChange={(e) => {
+                            setProduct({
+                              ...product!,
+                              attributes: product.attributes.map((attr) =>
+                                attr.name === attribute.name
+                                  ? { ...attr, value: e.target.value }
+                                  : attr
+                              ),
+                            });
+                          }}
+                        />
+                      </td>
+                      <td>
+                        <button
+                          className="uppercase bg-red-600 p-2 text-lg border border-black border-gray-300 font-bold text-white shadow-sm hover:bg-red-700 hover:text-white focus:outline-none focus:ring-2"
+                          onClick={() => {
+                            setProduct({
+                              ...product!,
+                              attributes: product.attributes.filter(
+                                (attr) => attr.name !== attribute.name
+                              ),
+                            });
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <button
+                      className="uppercase bg-blue-500 p-2 text-lg border border-black border-gray-300 font-bold text-white shadow-sm hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2"
+                      onClick={() =>
+                        setProduct({
+                          ...product,
+                          attributes: [
+                            ...product.attributes,
+                            { name: "", value: "" },
+                          ],
+                        })
+                      }
+                    >
+                      Add
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         <div className="flex gap-x-2">
           <button
             onClick={addProduct}

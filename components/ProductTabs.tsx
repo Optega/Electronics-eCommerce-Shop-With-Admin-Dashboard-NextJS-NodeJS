@@ -15,12 +15,7 @@ import React, { useState } from "react";
 const ProductTabs = ({ product }: { product: Product }) => {
   const [currentProductTab, setCurrentProductTab] = useState<number>(0);
 
-  const attributes: Array<{ name: string; value: string }> = product?.attributes
-    ? Object.entries(product.attributes).map(([name, value]) => ({
-        name,
-        value,
-      }))
-    : [];
+  const attributes: Attribute[] = product?.attributes ?? [];
 
   return (
     <div className="px-5 text-black">

@@ -1,3 +1,7 @@
+interface Attribute {
+  name: string;
+  value: string;
+}
 interface Product {
   id: string;
   slug: string;
@@ -12,7 +16,7 @@ interface Product {
   inStock: number;
   sku: string;
   reviewsCount: number;
-  attributes: JSON;
+  attributes: Attribute[];
 }
 
 interface SingleProductPageProps {
