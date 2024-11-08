@@ -7,6 +7,7 @@ import { convertCategoryNameToURLFriendly } from "../../../../../utils/categoryF
 const DashboardNewCategoryPage = () => {
   const [categoryInput, setCategoryInput] = useState({
     name: "",
+    title: "",
   });
 
   const addNewCategory = () => {
@@ -16,6 +17,7 @@ const DashboardNewCategoryPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: convertCategoryNameToURLFriendly(categoryInput.name),
+          title: categoryInput.title,
         }),
       };
       // sending API request for creating new cateogry
@@ -31,6 +33,7 @@ const DashboardNewCategoryPage = () => {
           toast.success("Category added successfully");
           setCategoryInput({
             name: "",
+            title: "",
           });
         })
         .catch((error) => {
@@ -45,7 +48,7 @@ const DashboardNewCategoryPage = () => {
       <DashboardSidebar />
       <div className="flex flex-col gap-y-7 xl:pl-5 max-xl:px-5 w-full">
         <h1 className="text-3xl font-semibold">Add new category</h1>
-        <div>
+        <div className="flex flex-col gap-4 sm:flex-row">
           <label className="form-control w-full max-w-xs">
             <div className="label">
               <span className="label-text">Category name:</span>
@@ -56,6 +59,19 @@ const DashboardNewCategoryPage = () => {
               value={categoryInput.name}
               onChange={(e) =>
                 setCategoryInput({ ...categoryInput, name: e.target.value })
+              }
+            />
+          </label>
+          <label className="form-control w-full max-w-xs">
+            <div className="label">
+              <span className="label-text">Category title:</span>
+            </div>
+            <input
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              value={categoryInput.title}
+              onChange={(e) =>
+                setCategoryInput({ ...categoryInput, title: e.target.value })
               }
             />
           </label>

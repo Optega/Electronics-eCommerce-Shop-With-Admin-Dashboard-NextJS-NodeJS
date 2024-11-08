@@ -3,10 +3,11 @@ const prisma = new PrismaClient();
 
 async function createCategory(request, response) {
   try {
-    const { name } = request.body;
+    const { name, title } = request.body;
     const category = await prisma.category.create({
       data: {
         name,
+        title,
       },
     });
     return response.status(201).json(category);
