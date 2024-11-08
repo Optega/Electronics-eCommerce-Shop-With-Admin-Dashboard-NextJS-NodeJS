@@ -8,8 +8,11 @@ interface Product {
   mainImage: string;
   manufacturer: string;
   categoryId: string;
-  category: {name: string}?;
+  category: { name: string }?;
   inStock: number;
+  sku: string;
+  reviewsCount: number;
+  attributes: JSON;
 }
 
 interface SingleProductPageProps {
@@ -36,6 +39,7 @@ interface OtherImages {
 interface Category {
   id: string;
   name: string;
+  title: string;
 }
 
 interface User {
@@ -67,7 +71,6 @@ interface SingleProductBtnProps {
   product: Product;
   quantityCount: number;
 }
-
 
 interface Category {
   id: string;

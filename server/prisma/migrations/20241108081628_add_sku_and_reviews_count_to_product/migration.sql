@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `Product` ADD COLUMN `reviewsCount` INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN `sku` VARCHAR(191) NOT NULL DEFAULT '';
