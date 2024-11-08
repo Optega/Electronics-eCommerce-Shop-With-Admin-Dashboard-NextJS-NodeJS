@@ -5,7 +5,15 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { isValidCardNumber, isValidCreditCardCVVOrCVC, isValidCreditCardExpirationDate, isValidEmailAddressFormat, isValidNameOrLastname } from "@/lib/utils";
+import {
+  isValidCardNumber,
+  isValidCreditCardCVVOrCVC,
+  isValidCreditCardExpirationDate,
+  isValidEmailAddressFormat,
+  isValidNameOrLastname,
+} from "@/lib/utils";
+
+const SHIPMENT_PRICE = 85;
 
 const CheckoutPage = () => {
   const [checkoutForm, setCheckoutForm] = useState({
@@ -131,13 +139,13 @@ const CheckoutPage = () => {
             orderNotice: "",
           });
           clearCart();
-          toast.success("Order created successfuly");
+          toast.success("Замовлення створено успішно");
           setTimeout(() => {
             router.push("/");
           }, 1000);
         });
     } else {
-      toast.error("You need to enter values in the input fields");
+      toast.error("Ви повинні ввести значення у поля вводу");
     }
   };
 
@@ -160,18 +168,16 @@ const CheckoutPage = () => {
     });
   };
 
-  
-
   useEffect(() => {
     if (products.length === 0) {
-      toast.error("You don't have items in your cart");
+      toast.error("У вас немає товарів у кошику");
       router.push("/cart");
     }
   }, []);
 
   return (
     <div className="bg-white">
-      <SectionTitle title="Checkout" path="Home | Cart | Checkout" />
+      <SectionTitle title="Оплата" />
       {/* Background color split screen for large screens */}
       <div
         className="hidden h-full w-1/2 bg-white lg:block"
@@ -183,7 +189,7 @@ const CheckoutPage = () => {
       />
 
       <main className="relative mx-auto grid max-w-screen-2xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 xl:gap-x-48">
-        <h1 className="sr-only">Order information</h1>
+        <h1 className="sr-only">Іноформація про замовлення</h1>
 
         <section
           aria-labelledby="summary-heading"
@@ -194,7 +200,7 @@ const CheckoutPage = () => {
               id="summary-heading"
               className="text-lg font-medium text-gray-900"
             >
-              Order summary
+              Іноформація про замовлення
             </h2>
 
             <ul
@@ -207,7 +213,11 @@ const CheckoutPage = () => {
                   className="flex items-start space-x-4 py-6"
                 >
                   <Image
-                    src={product?.image ? `/${product?.image}` : "/product_placeholder.jpg"}
+                    src={
+                      product?.image
+                        ? `/${product?.image}`
+                        : "/product_placeholder.jpg"
+                    }
                     alt={product?.title}
                     width={80}
                     height={80}
@@ -218,7 +228,7 @@ const CheckoutPage = () => {
                     <p className="text-gray-500">x{product?.amount}</p>
                   </div>
                   <p className="flex-none text-base font-medium">
-                    ${product?.price}
+                    ₴{product?.price}
                   </p>
                   <p></p>
                 </li>
@@ -227,24 +237,25 @@ const CheckoutPage = () => {
 
             <dl className="hidden space-y-6 border-t border-gray-200 pt-6 text-sm font-medium text-gray-900 lg:block">
               <div className="flex items-center justify-between">
-                <dt className="text-gray-600">Subtotal</dt>
+                <dt className="text-gray-600">Сума</dt>
                 <dd>${total}</dd>
               </div>
 
               <div className="flex items-center justify-between">
-                <dt className="text-gray-600">Shipping</dt>
-                <dd>$5</dd>
+                <dt className="text-gray-600">Доставка</dt>
+                <dd>₴{SHIPMENT_PRICE}</dd>
               </div>
 
+              {/* 
               <div className="flex items-center justify-between">
                 <dt className="text-gray-600">Taxes</dt>
-                <dd>${total / 5}</dd>
-              </div>
+                <dd>${SHIPMENT_PRICE}</dd>
+              </div> */}
 
               <div className="flex items-center justify-between border-t border-gray-200 pt-6">
-                <dt className="text-base">Total</dt>
+                <dt className="text-base">Загальна сума</dt>
                 <dd className="text-base">
-                  ${total === 0 ? 0 : Math.round(total + total / 5 + 5)}
+                  ₴{total === 0 ? 0 : Math.round(total + SHIPMENT_PRICE)}
                 </dd>
               </div>
             </dl>
@@ -258,7 +269,7 @@ const CheckoutPage = () => {
                 id="contact-info-heading"
                 className="text-lg font-medium text-gray-900"
               >
-                Contact information
+                Контактна інформація
               </h2>
 
               <div className="mt-6">
@@ -266,7 +277,7 @@ const CheckoutPage = () => {
                   htmlFor="name-input"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Name
+                  Ім`я
                 </label>
                 <div className="mt-1">
                   <input
@@ -291,7 +302,7 @@ const CheckoutPage = () => {
                   htmlFor="lastname-input"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Lastname
+                  Прізвище
                 </label>
                 <div className="mt-1">
                   <input
@@ -316,7 +327,7 @@ const CheckoutPage = () => {
                   htmlFor="phone-input"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Phone number
+                  Номер телефону
                 </label>
                 <div className="mt-1">
                   <input
@@ -341,7 +352,7 @@ const CheckoutPage = () => {
                   htmlFor="email-address"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Email address
+                  Email адреса
                 </label>
                 <div className="mt-1">
                   <input
@@ -367,7 +378,7 @@ const CheckoutPage = () => {
                 id="payment-heading"
                 className="text-lg font-medium text-gray-900"
               >
-                Payment details
+                Деталі платежу
               </h2>
 
               <div className="mt-6 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4">
@@ -376,7 +387,7 @@ const CheckoutPage = () => {
                     htmlFor="name-on-card"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Name on card
+                    Ім`я на картці
                   </label>
                   <div className="mt-1">
                     <input
@@ -401,7 +412,7 @@ const CheckoutPage = () => {
                     htmlFor="card-number"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Card number
+                    Номер картки
                   </label>
                   <div className="mt-1">
                     <input
@@ -426,7 +437,7 @@ const CheckoutPage = () => {
                     htmlFor="expiration-date"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Expiration date (MM/YY)
+                    Дійсна до (MM/YY)
                   </label>
                   <div className="mt-1">
                     <input
@@ -451,7 +462,7 @@ const CheckoutPage = () => {
                     htmlFor="cvc"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    CVC or CVV
+                    CVC | CVV
                   </label>
                   <div className="mt-1">
                     <input
@@ -478,7 +489,7 @@ const CheckoutPage = () => {
                 id="shipping-heading"
                 className="text-lg font-medium text-gray-900"
               >
-                Shipping address
+                Адреса доставки
               </h2>
 
               <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-3">
@@ -487,7 +498,7 @@ const CheckoutPage = () => {
                     htmlFor="company"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Company
+                    Компанія
                   </label>
                   <div className="mt-1">
                     <input
@@ -511,7 +522,7 @@ const CheckoutPage = () => {
                     htmlFor="address"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Address
+                    Адреса
                   </label>
                   <div className="mt-1">
                     <input
@@ -536,7 +547,7 @@ const CheckoutPage = () => {
                     htmlFor="apartment"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Apartment, suite, etc.
+                    Квартира, дім, офіс
                   </label>
                   <div className="mt-1">
                     <input
@@ -560,7 +571,7 @@ const CheckoutPage = () => {
                     htmlFor="city"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    City
+                    Місто
                   </label>
                   <div className="mt-1">
                     <input
@@ -585,7 +596,7 @@ const CheckoutPage = () => {
                     htmlFor="region"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Country
+                    Країна
                   </label>
                   <div className="mt-1">
                     <input
@@ -610,7 +621,7 @@ const CheckoutPage = () => {
                     htmlFor="postal-code"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Postal code
+                    Поштовий індекс
                   </label>
                   <div className="mt-1">
                     <input
@@ -635,7 +646,7 @@ const CheckoutPage = () => {
                     htmlFor="order-notice"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Order notice
+                    Коментар до замовлення
                   </label>
                   <div className="mt-1">
                     <textarea
@@ -662,7 +673,7 @@ const CheckoutPage = () => {
                 onClick={makePurchase}
                 className="w-full rounded-md border border-transparent bg-blue-500 px-20 py-2 text-lg font-medium text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-gray-50 sm:order-last"
               >
-                Pay Now
+                Оплатити
               </button>
             </div>
           </div>

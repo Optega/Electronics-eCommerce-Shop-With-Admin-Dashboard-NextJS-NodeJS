@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  CustomButton,
-  QuantityInput,
-  QuantityInputCart,
-  SectionTitle,
-} from "@/components";
+import { QuantityInputCart, SectionTitle } from "@/components";
 import Image from "next/image";
 import React from "react";
 import { FaCheck, FaClock, FaCircleQuestion, FaXmark } from "react-icons/fa6";
