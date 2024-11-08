@@ -21,29 +21,32 @@ const Footer = () => {
         </h2>
         <div className="mx-auto max-w-screen-2xl px-6 lg:px-8 pt-24 pb-14">
           <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-            <div className="flex flex-col justify-between items-center sm:flex-row">
+            <div className="flex flex-col justify-between items-center sm:flex-row xl:flex-col xl:justify-center">
               <Image
                 src="/images/logo/RadioTech.png"
                 width={250}
                 height={250}
                 alt="RadioTech logo"
                 className="h-auto w-auto"
+                priority
               />
               <div className="flex flex-row">
-                <Image
-                  src="/images/logo/visa-logo.svg"
-                  width={40}
-                  height={40}
-                  alt="visa logo"
-                  className="h-[40px] w-auto"
-                />
-                <Image
-                  src="/images/logo/mastercard-logo.svg"
-                  width={40}
-                  height={40}
-                  alt="mastercard logo"
-                  className="h-[40px] w-auto"
-                />
+                <div className="relative h-[40px] w-[80px]">
+                  <Image
+                    src="/images/logo/visa-logo.svg"
+                    alt="visa logo"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="relative h-[40px] w-[80px]">
+                  <Image
+                    src="/images/logo/mastercard-logo.svg"
+                    alt="mastercard logo"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
               </div>
             </div>
             <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">

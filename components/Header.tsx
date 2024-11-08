@@ -109,6 +109,7 @@ const Header = () => {
               height={130}
               alt="RadioTech logo"
               className="w-56 h-auto"
+              priority
             />
           </Link>
           <div className="flex gap-x-5 items-center">
