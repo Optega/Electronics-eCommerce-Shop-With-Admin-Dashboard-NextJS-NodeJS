@@ -23,9 +23,18 @@ const improveCategoryText = (text: string): string => {
 
 const ShopPage = async (slug: any) => {
   // sending API request for getting min and max prices of products
-  const data = await fetch(`http://localhost:3001/api/products/min-max-prices`);
+  const prices = await fetch(
+    `http://localhost:3001/api/products/min-max-prices`
+  );
+  const minMaxPrices = await prices.json();
 
-  const minMaxPrices = await data.json();
+  const getCategoryTitle = async (name: string) => {
+    const category = await fetch(
+      `http://localhost:3001/api/categories/name/${name}`
+    );
+    const categoryData = await category?.json();
+    return categoryData ? categoryData.title : null;
+  };
 
   return (
     <div className="text-black bg-white">
@@ -37,7 +46,8 @@ const ShopPage = async (slug: any) => {
             <div className="flex justify-between items-center max-lg:flex-col max-lg:gap-y-5">
               <h2 className="text-2xl font-bold max-sm:text-xl max-[400px]:text-lg uppercase">
                 {slug?.params?.slug && slug?.params?.slug[0]?.length > 0
-                  ? improveCategoryText(slug?.params?.slug[0])
+                  ? getCategoryTitle(slug?.params?.slug[0]) ??
+                    improveCategoryText(slug?.params?.slug[0])
                   : "Всі товари"}
               </h2>
 

@@ -74,6 +74,19 @@ async function getCategory(request, response) {
   return response.status(200).json(category);
 }
 
+async function getCategoryByName(request, response) {
+  const { name } = request.params;
+  const category = await prisma.category.findUnique({
+    where: {
+      name: name,
+    },
+  });
+  if (!category) {
+    return response.status(404).json({ error: "Category not found" });
+  }
+  return response.status(200).json(category);
+}
+
 async function getAllCategories(request, response) {
   try {
     const categories = await prisma.category.findMany({});
@@ -88,5 +101,6 @@ module.exports = {
   updateCategory,
   deleteCategory,
   getCategory,
+  getCategoryByName,
   getAllCategories,
 };

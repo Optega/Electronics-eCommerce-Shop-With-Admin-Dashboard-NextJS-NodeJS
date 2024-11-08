@@ -42,7 +42,11 @@ const SingleProductPage = async ({ params }: SingleProductPageProps) => {
         <div className="flex justify-center gap-x-16 pt-10 max-lg:flex-col items-center gap-y-5 px-5">
           <div>
             <Image
-              src={product?.mainImage ? `/${product?.mainImage}` : "/product_placeholder.jpg"}
+              src={
+                product?.mainImage
+                  ? `/${product?.mainImage}`
+                  : "/product_placeholder.jpg"
+              }
               width={500}
               height={500}
               alt="main image"
@@ -62,17 +66,20 @@ const SingleProductPage = async ({ params }: SingleProductPageProps) => {
             </div>
           </div>
           <div className="flex flex-col gap-y-7 text-black max-[500px]:text-center">
-            <SingleProductRating rating={product?.rating} />
+            <SingleProductRating
+              rating={product?.rating}
+              reviewsCount={product?.reviewsCount}
+            />
             <h1 className="text-3xl">{product?.title}</h1>
             <p className="text-xl font-semibold">${product?.price}</p>
             <StockAvailabillity stock={94} inStock={product?.inStock} />
             <SingleProductDynamicFields product={product} />
             <div className="flex flex-col gap-y-2 max-[500px]:items-center">
-              <AddToWishlistBtn product={product} slug={params.productSlug} />
               <p className="text-lg">
-                SKU: <span className="ml-1">abccd-18</span>
+                Артикул: <span className="ml-1">{product?.sku}</span>
               </p>
-              <div className="text-lg flex gap-x-2">
+              <AddToWishlistBtn product={product} slug={params.productSlug} />
+              {/* <div className="text-lg flex gap-x-2">
                 <span>Share:</span>
                 <div className="flex items-center gap-x-1 text-2xl">
                   <FaSquareFacebook />
@@ -123,7 +130,7 @@ const SingleProductPage = async ({ params }: SingleProductPageProps) => {
                   alt="discover icon"
                   className="h-auto w-auto"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

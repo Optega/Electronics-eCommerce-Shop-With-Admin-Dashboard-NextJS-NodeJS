@@ -120,7 +120,7 @@ const AddToWishlistBtn = ({ product, slug }: AddToWishlistBtnProps) => {
           onClick={removeFromWishlistFun}
         >
           <FaHeartCrack className="text-xl text-custom-black" />
-          <span className="text-lg">REMOVE FROM WISHLIST</span>
+          <span className="text-lg uppercase">Прибрати з бажань</span>
         </p>
       ) : (
         <p
@@ -128,7 +128,7 @@ const AddToWishlistBtn = ({ product, slug }: AddToWishlistBtnProps) => {
           onClick={addToWishlistFun}
         >
           <FaHeart className="text-xl text-custom-black" />
-          <span className="text-lg">ADD TO WISHLIST</span>
+          <span className="text-lg uppercase">Додати в бажання</span>
         </p>
       )}
     </>

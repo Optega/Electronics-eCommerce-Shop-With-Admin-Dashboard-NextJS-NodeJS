@@ -19,9 +19,10 @@ interface QuantityInputProps {
   setQuantityCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const QuantityInput = ({quantityCount, setQuantityCount} : QuantityInputProps) => {
-
-
+const QuantityInput = ({
+  quantityCount,
+  setQuantityCount,
+}: QuantityInputProps) => {
   const handleQuantityChange = (actionName: string): void => {
     if (actionName === "plus") {
       setQuantityCount(quantityCount + 1);
@@ -32,7 +33,7 @@ const QuantityInput = ({quantityCount, setQuantityCount} : QuantityInputProps) =
 
   return (
     <div className="flex items-center gap-x-4 max-[500px]:justify-center">
-      <p className="text-xl">Quantity: </p>
+      <p className="text-xl">Кількість: </p>
 
       <div className="flex items-center gap-1">
         <button

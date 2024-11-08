@@ -146,82 +146,95 @@ const demoProducts = [
     manufacturer: "Gillete",
     categoryId: "313eee86-bc11-4dc1-8cb0-6b2c2a2a1ccb",
     inStock: 0,
-  }
+  },
 ];
-
 
 const demoCategories = [
   {
     id: "7a241318-624f-48f7-9921-1818f6c20d85",
     name: "speakers",
+    title: "speakers",
   },
   {
     id: "313eee86-bc11-4dc1-8cb0-6b2c2a2a1ccb",
     name: "trimmers",
+    title: "trimmers",
   },
   {
     id: "782e7829-806b-489f-8c3a-2689548d7153",
     name: "laptops",
+    title: "laptops",
   },
   {
     id: "a6896b67-197c-4b2a-b5e2-93954474d8b4",
     name: "watches",
+    title: "watches",
   },
   {
     id: "4c2cc9ec-7504-4b7c-8ecd-2379a854a423",
     name: "headphones",
+    title: "headphones",
   },
   {
     id: "8d2a091c-4b90-4d60-b191-114b895f3e54",
     name: "juicers",
+    title: "juicers",
   },
   {
     id: "1cb9439a-ea47-4a33-913b-e9bf935bcc0b",
     name: "earbuds",
+    title: "earbuds",
   },
   {
     id: "ada699e5-e764-4da0-8d3e-18a8c8c5ed24",
     name: "tablets",
+    title: "tablets",
   },
   {
     id: "d30b85e2-e544-4f48-8434-33fe0b591579",
     name: "phone-gimbals",
+    title: "phone-gimbals",
   },
   {
     id: "6c3b8591-b01e-4842-bce1-2f5585bf3a28",
     name: "mixer-grinders",
+    title: "mixer-grinders",
   },
   {
     id: "659a91b9-3ff6-47d5-9830-5e7ac905b961",
     name: "cameras",
+    title: "cameras",
   },
   {
     id: "3117a1b0-6369-491e-8b8b-9fdd5ad9912e",
     name: "smart-phones",
+    title: "smart-phones",
   },
   {
     id: "da6413b4-22fd-4fbb-9741-d77580dfdcd5",
-    name: "mouses"
+    name: "mouses",
+    title: "mouses",
   },
   {
     id: "ss6412b4-22fd-4fbb-9741-d77580dfdcd2",
-    name: "computers"
+    name: "computers",
+    title: "computers",
   },
   {
     id: "fs6412b4-22fd-4fbb-9741-d77512dfdfa3",
-    name: "printers"
-  }
+    name: "printers",
+    title: "printers",
+  },
 ];
 
 async function insertDemoData() {
-  
   for (const category of demoCategories) {
     await prisma.category.create({
       data: category,
     });
   }
   console.log("Demo categories inserted successfully!");
-  
+
   for (const product of demoProducts) {
     await prisma.product.create({
       data: product,

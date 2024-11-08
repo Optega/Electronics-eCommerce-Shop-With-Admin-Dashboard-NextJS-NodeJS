@@ -1,5 +1,5 @@
 // *********************
-// Role of the component: Rating stars component that will display stars on the single product page 
+// Role of the component: Rating stars component that will display stars on the single product page
 // Name of the component: SingleProductRating.tsx
 // Developer: Aleksandar Kuzmanovic
 // Version: 1.0
@@ -11,7 +11,28 @@
 import React from "react";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
-const SingleProductRating = ({ rating }: { rating: number }) => {
+const getTextByReviewsCount = (reviewsCount: number) => {
+  const lastDigit = reviewsCount % 10;
+  if (lastDigit === 1 && reviewsCount !== 11) {
+    return "відгук";
+  } else if (
+    lastDigit >= 2 &&
+    lastDigit <= 4 &&
+    (reviewsCount < 10 || reviewsCount > 20)
+  ) {
+    return "відгуки";
+  } else {
+    return "відгуків";
+  }
+};
+
+const SingleProductRating = ({
+  rating,
+  reviewsCount,
+}: {
+  rating: number;
+  reviewsCount: number;
+}) => {
   const ratingArray: Array<string> = [
     "empty star",
     "empty star",
@@ -38,7 +59,9 @@ const SingleProductRating = ({ rating }: { rating: number }) => {
             </>
           );
         })}
-      <span className="text-xl ml-1">(3 reviews)</span>
+      <span className="text-xl ml-1">{`(${reviewsCount} ${getTextByReviewsCount(
+        reviewsCount
+      )})`}</span>
     </div>
   );
 };

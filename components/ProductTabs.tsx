@@ -11,12 +11,16 @@
 "use client";
 
 import React, { useState } from "react";
-import RatingPercentElement from "./RatingPercentElement";
-import SingleReview from "./SingleReview";
-import { formatCategoryName } from "@/utils/categoryFormating";
 
 const ProductTabs = ({ product }: { product: Product }) => {
   const [currentProductTab, setCurrentProductTab] = useState<number>(0);
+
+  const attributes: Array<{ name: string; value: string }> = product?.attributes
+    ? Object.entries(product.attributes).map(([name, value]) => ({
+        name,
+        value,
+      }))
+    : [];
 
   return (
     <div className="px-5 text-black">
@@ -28,7 +32,7 @@ const ProductTabs = ({ product }: { product: Product }) => {
           }`}
           onClick={() => setCurrentProductTab(0)}
         >
-          Description
+          Опис
         </a>
         <a
           role="tab"
@@ -37,7 +41,7 @@ const ProductTabs = ({ product }: { product: Product }) => {
           }`}
           onClick={() => setCurrentProductTab(1)}
         >
-          Additional info
+          Характеристики
         </a>
       </div>
       <div className="pt-5">
@@ -51,25 +55,12 @@ const ProductTabs = ({ product }: { product: Product }) => {
           <div className="overflow-x-auto">
             <table className="table text-xl text-center max-[500px]:text-base">
               <tbody>
-                {/* row 1 */}
-                <tr>
-                  <th>Manufacturer:</th>
-                  <td>{product?.manufacturer}</td>
-                </tr>
-                {/* row 2 */}
-                <tr>
-                  <th>Category:</th>
-                  <td>
-                    {product?.category?.name
-                      ? formatCategoryName(product?.category?.name)
-                      : "No category"}
-                  </td>
-                </tr>
-                {/* row 3 */}
-                <tr>
-                  <th>Color:</th>
-                  <td>Silver, LightSlateGray, Blue</td>
-                </tr>
+                {attributes?.map((attribute) => (
+                  <tr key={attribute.name}>
+                    <th>{attribute.name}:</th>
+                    <td>{attribute.value}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
