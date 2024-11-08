@@ -13,6 +13,8 @@ import { useProductStore } from "../_zustand/store";
 import Link from "next/link";
 import toast from "react-hot-toast";
 
+const SHIPMENT_PRICE = 85;
+
 const CartPage = () => {
   const { products, removeFromCart, calculateTotals, total } =
     useProductStore();
@@ -20,21 +22,21 @@ const CartPage = () => {
   const handleRemoveItem = (id: string) => {
     removeFromCart(id);
     calculateTotals();
-    toast.success("Product removed from the cart");
+    toast.success("Товари видалено з кошика");
   };
 
   return (
     <div className="bg-white">
-      <SectionTitle title="Cart Page" path="Home | Cart" />
+      <SectionTitle title="Кошик" />
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Shopping Cart
+            Кошик
           </h1>
           <form className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
             <section aria-labelledby="cart-heading" className="lg:col-span-7">
               <h2 id="cart-heading" className="sr-only">
-                Items in your shopping cart
+                Товари в кошику
               </h2>
 
               <ul
@@ -47,7 +49,11 @@ const CartPage = () => {
                       <Image
                         width={192}
                         height={192}
-                        src={product?.image ? `/${product.image}` : "/product_placeholder.jpg"}
+                        src={
+                          product?.image
+                            ? `/${product.image}`
+                            : "/product_placeholder.jpg"
+                        }
                         alt="laptop image"
                         className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
                       />
@@ -85,7 +91,7 @@ const CartPage = () => {
                               type="button"
                               className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
                             >
-                              <span className="sr-only">Remove</span>
+                              <span className="sr-only">Видалити</span>
                               <FaXmark className="h-5 w-5" aria-hidden="true" />
                             </button>
                           </div>
@@ -105,7 +111,9 @@ const CartPage = () => {
                           />
                         )}
 
-                        <span>{1 ? "In stock" : `Ships in 3 days`}</span>
+                        <span>
+                          {1 ? "В наявності" : `Відправка на протязі 3-х днів`}
+                        </span>
                       </p>
                     </div>
                   </li>
@@ -122,35 +130,35 @@ const CartPage = () => {
                 id="summary-heading"
                 className="text-lg font-medium text-gray-900"
               >
-                Order summary
+                Разом
               </h2>
 
               <dl className="mt-6 space-y-4">
                 <div className="flex items-center justify-between">
-                  <dt className="text-sm text-gray-600">Subtotal</dt>
+                  <dt className="text-sm text-gray-600">Сума</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    ${total}
+                    ₴{total}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="flex items-center text-sm text-gray-600">
-                    <span>Shipping estimate</span>
+                    <span>Доставка</span>
                     <a
                       href="#"
                       className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500"
                     >
-                      <span className="sr-only">
-                        Learn more about how shipping is calculated
-                      </span>
+                      <span className="sr-only">Детальніше про доставку</span>
                       <FaCircleQuestion
                         className="h-5 w-5"
                         aria-hidden="true"
                       />
                     </a>
                   </dt>
-                  <dd className="text-sm font-medium text-gray-900">$5.00</dd>
+                  <dd className="text-sm font-medium text-gray-900">
+                    ₴{SHIPMENT_PRICE}
+                  </dd>
                 </div>
-                <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                {/* <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="flex text-sm text-gray-600">
                     <span>Tax estimate</span>
                     <a
@@ -169,13 +177,13 @@ const CartPage = () => {
                   <dd className="text-sm font-medium text-gray-900">
                     ${total / 5}
                   </dd>
-                </div>
+                </div> */}
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="text-base font-medium text-gray-900">
-                    Order total
+                    Загальна сума
                   </dt>
                   <dd className="text-base font-medium text-gray-900">
-                    ${total === 0 ? 0 : Math.round(total + total / 5 + 5)}
+                    ₴{total === 0 ? 0 : Math.round(total + SHIPMENT_PRICE)}
                   </dd>
                 </div>
               </dl>
@@ -185,7 +193,7 @@ const CartPage = () => {
                     href="/checkout"
                     className="block flex justify-center items-center w-full uppercase bg-white px-4 py-3 text-base border border-black border-gray-300 font-bold text-blue-600 shadow-sm hover:bg-black hover:bg-gray-100 focus:outline-none focus:ring-2"
                   >
-                    <span>Checkout</span>
+                    <span>Перейти до оплати</span>
                   </Link>
                 </div>
               )}
