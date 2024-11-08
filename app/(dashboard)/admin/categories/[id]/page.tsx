@@ -13,8 +13,12 @@ interface DashboardSingleCategoryProps {
 const DashboardSingleCategory = ({
   params: { id },
 }: DashboardSingleCategoryProps) => {
-  const [categoryInput, setCategoryInput] = useState<{ name: string }>({
+  const [categoryInput, setCategoryInput] = useState<{
+    name: string;
+    title: string;
+  }>({
     name: "",
+    title: "",
   });
   const router = useRouter();
 
@@ -44,6 +48,7 @@ const DashboardSingleCategory = ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: convertCategoryNameToURLFriendly(categoryInput.name),
+          title: categoryInput.title,
         }),
       };
       // sending API request for updating a category
@@ -74,6 +79,7 @@ const DashboardSingleCategory = ({
       .then((data) => {
         setCategoryInput({
           name: data?.name,
+          title: data?.title,
         });
       });
   }, [id]);
@@ -83,7 +89,7 @@ const DashboardSingleCategory = ({
       <DashboardSidebar />
       <div className="flex flex-col gap-y-7 xl:pl-5 max-xl:px-5 w-full">
         <h1 className="text-3xl font-semibold">Category details</h1>
-        <div>
+        <div className="flex flex-col gap-4 sm:flex-row">
           <label className="form-control w-full max-w-xs">
             <div className="label">
               <span className="label-text">Category name:</span>
@@ -94,6 +100,19 @@ const DashboardSingleCategory = ({
               value={formatCategoryName(categoryInput.name)}
               onChange={(e) =>
                 setCategoryInput({ ...categoryInput, name: e.target.value })
+              }
+            />
+          </label>
+          <label className="form-control w-full max-w-xs">
+            <div className="label">
+              <span className="label-text">Category title:</span>
+            </div>
+            <input
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              value={categoryInput.title}
+              onChange={(e) =>
+                setCategoryInput({ ...categoryInput, title: e.target.value })
               }
             />
           </label>

@@ -19,7 +19,7 @@ async function createCategory(request, response) {
 async function updateCategory(request, response) {
   try {
     const { id } = request.params;
-    const { name } = request.body;
+    const { name, title } = request.body;
 
     const existingCategory = await prisma.category.findUnique({
       where: {
@@ -37,6 +37,7 @@ async function updateCategory(request, response) {
       },
       data: {
         name,
+        title,
       },
     });
 

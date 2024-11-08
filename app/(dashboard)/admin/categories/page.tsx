@@ -49,6 +49,7 @@ const DashboardCategory = () => {
                   </label>
                 </th>
                 <th>Name</th>
+                <th>Title</th>
                 <th></th>
               </tr>
             </thead>
@@ -68,6 +69,12 @@ const DashboardCategory = () => {
                       </div>
                     </td>
 
+                    <td>
+                      <div>
+                        <p>{formatCategoryName(category?.title)}</p>
+                      </div>
+                    </td>
+
                     <th>
                       <Link
                         href={`/admin/categories/${category?.id}`}
@@ -84,6 +91,7 @@ const DashboardCategory = () => {
               <tr>
                 <th></th>
                 <th>Name</th>
+                <th>Title</th>
                 <th></th>
               </tr>
             </tfoot>
