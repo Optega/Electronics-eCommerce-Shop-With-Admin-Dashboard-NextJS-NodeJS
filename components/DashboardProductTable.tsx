@@ -81,9 +81,10 @@ const DashboardProductTable = () => {
                             width={48}
                             height={48}
                             src={
-                              "images/products/" + product?.mainImage
+                              "/images/products" +
+                              (product?.mainImage
                                 ? `/${product?.mainImage}`
-                                : "/product_placeholder.jpg"
+                                : "/product_placeholder.jpg")
                             }
                             alt="product image"
                             className="w-auto h-auto"
