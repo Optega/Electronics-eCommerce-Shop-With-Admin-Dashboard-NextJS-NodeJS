@@ -25,9 +25,10 @@ const ProductItem = ({
       <Link href={`/product/${product.slug}`}>
         <Image
           src={
-            product.mainImage
+            "/images/products" +
+            (product.mainImage
               ? `/${product.mainImage}`
-              : "/product_placeholder.jpg"
+              : "/product_placeholder.jpg")
           }
           width="0"
           height="0"
@@ -53,7 +54,7 @@ const ProductItem = ({
             : "text-lg text-white font-semibold"
         }
       >
-        ${product.price}
+        ₴{product.price}
       </p>
 
       <ProductItemRating productRating={product?.rating} />

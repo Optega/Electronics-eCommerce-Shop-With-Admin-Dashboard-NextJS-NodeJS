@@ -43,9 +43,10 @@ const SingleProductPage = async ({ params }: SingleProductPageProps) => {
           <div>
             <Image
               src={
-                product?.mainImage
+                "/images/products" +
+                (product?.mainImage
                   ? `/${product?.mainImage}`
-                  : "/product_placeholder.jpg"
+                  : "/product_placeholder.jpg")
               }
               width={500}
               height={500}
@@ -56,10 +57,10 @@ const SingleProductPage = async ({ params }: SingleProductPageProps) => {
               {images?.map((imageItem: ImageItem) => (
                 <Image
                   key={imageItem.imageID}
-                  src={`/${imageItem.image}`}
+                  src={`/images/products/${imageItem.image}`}
                   width={100}
                   height={100}
-                  alt="laptop image"
+                  alt="image"
                   className="w-auto h-auto"
                 />
               ))}
