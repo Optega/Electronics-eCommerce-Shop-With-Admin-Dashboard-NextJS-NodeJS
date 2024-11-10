@@ -273,7 +273,7 @@ const AddNewProduct = () => {
           </label>
         </div>
 
-        <div>
+        {/* <div>
           <input
             type="file"
             className="file-input file-input-bordered file-input-lg w-full max-w-sm"
@@ -291,7 +291,8 @@ const AddNewProduct = () => {
               height={100}
             />
           )}
-        </div>
+        </div> */}
+
         <div>
           <label className="form-control">
             <div className="label">
