@@ -95,6 +95,7 @@ const DashboardProductDetails = ({
 
       if (response.ok) {
         const data = await response.json();
+        toast.success("File uploaded successfully.");
       } else {
         toast.error("File upload unsuccessful.");
       }
@@ -319,7 +320,7 @@ const DashboardProductDetails = ({
             <Image
               src={`/images/products/` + product?.mainImage}
               alt={product?.title}
-              className="w-auto h-auto mt-2"
+              className="m-w-[100px] m-h-[100px] mt-2"
               width={100}
               height={100}
             />
