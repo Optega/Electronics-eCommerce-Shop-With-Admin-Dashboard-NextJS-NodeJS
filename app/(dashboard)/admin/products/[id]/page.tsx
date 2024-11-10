@@ -1,5 +1,10 @@
 "use client";
-import { CustomButton, DashboardSidebar, SectionTitle } from "@/components";
+import {
+  Checkbox,
+  CustomButton,
+  DashboardSidebar,
+  SectionTitle,
+} from "@/components";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -21,6 +26,7 @@ const DashboardProductDetails = ({
   const [product, setProduct] = useState<Product>();
   const [categories, setCategories] = useState<Category[]>();
   const [otherImages, setOtherImages] = useState<OtherImages[]>([]);
+  const [addNew, setAddNew] = useState<boolean>(false);
   const router = useRouter();
 
   // functionality for deleting product
@@ -76,7 +82,12 @@ const DashboardProductDetails = ({
           throw Error("There was an error while updating product");
         }
       })
-      .then((data) => toast.success("Product successfully updated"))
+      .then((data) => {
+        toast.success("Product successfully updated");
+        if (addNew) {
+          router.push(`/admin/products/new`);
+        }
+      })
       .catch((error) => {
         toast.error("There was an error while updating product");
       });
@@ -462,6 +473,14 @@ const DashboardProductDetails = ({
           </div>
         </div>
         {/* Product attributes div - end */}
+
+        <div>
+          <Checkbox
+            stateValue={addNew}
+            setStateValue={setAddNew}
+            text="Add new product?"
+          />
+        </div>
 
         {/* Action buttons div - start */}
         <div className="flex gap-x-2 max-sm:flex-col">

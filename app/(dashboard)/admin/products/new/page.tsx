@@ -1,12 +1,14 @@
 "use client";
-import { DashboardSidebar } from "@/components";
+import { Checkbox, DashboardSidebar } from "@/components";
 import { convertCategoryNameToURLFriendly as convertSlugToURLFriendly } from "@/utils/categoryFormating";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Markdown from "react-markdown";
 
 const AddNewProduct = () => {
+  const router = useRouter();
   const [product, setProduct] = useState<{
     title: string;
     price: number;
@@ -33,6 +35,7 @@ const AddNewProduct = () => {
     attributes: [],
   });
   const [categories, setCategories] = useState<Category[]>([]);
+  const [addNew, setAddNew] = useState<boolean>(false);
 
   const addProduct = async () => {
     if (
@@ -63,19 +66,24 @@ const AddNewProduct = () => {
       })
       .then((data) => {
         toast.success("Product added successfully");
-        setProduct({
-          title: "",
-          price: 0,
-          manufacturer: "",
-          inStock: 1,
-          mainImage: "",
-          description: "",
-          slug: "",
-          categoryId: "",
-          sku: "",
-          reviewsCount: 0,
-          attributes: [],
-        });
+        if (addNew) {
+          setProduct({
+            title: "",
+            price: 0,
+            manufacturer: "",
+            inStock: 1,
+            mainImage: "",
+            description: "",
+            slug: "",
+            categoryId: "",
+            sku: "",
+            reviewsCount: 0,
+            attributes: [],
+          });
+          return;
+        }
+
+        router.push(`/admin/products/${data.id}`);
       })
       .catch((error) => {
         toast.error("There was an error while creating product");
@@ -410,6 +418,13 @@ const AddNewProduct = () => {
           </div>
         </div>
 
+        <div>
+          <Checkbox
+            stateValue={addNew}
+            setStateValue={setAddNew}
+            text="Add new product?"
+          />
+        </div>
         <div className="flex gap-x-2">
           <button
             onClick={addProduct}
