@@ -10,7 +10,7 @@
 
 "use client";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import HeaderTop from "./HeaderTop";
 import Image from "next/image";
 import SearchInput from "./SearchInput";
@@ -34,36 +34,39 @@ const Header = () => {
   };
 
   // getting all wishlist items by user id
-  const getWishlistByUserId = async (id: string) => {
-    const response = await fetch(`http://localhost:3001/api/wishlist/${id}`, {
-      cache: "no-store",
-    });
-    const wishlist = await response.json();
-    const productArray: {
-      id: string;
-      title: string;
-      price: number;
-      image: string;
-      slug: string;
-      stockAvailabillity: number;
-    }[] = [];
+  const getWishlistByUserId = useCallback(
+    async (id: string) => {
+      const response = await fetch(`http://localhost:3001/api/wishlist/${id}`, {
+        cache: "no-store",
+      });
+      const wishlist = await response.json();
+      const productArray: {
+        id: string;
+        title: string;
+        price: number;
+        image: string;
+        slug: string;
+        stockAvailabillity: number;
+      }[] = [];
 
-    wishlist.map((item: any) =>
-      productArray.push({
-        id: item?.product?.id,
-        title: item?.product?.title,
-        price: item?.product?.price,
-        image: item?.product?.mainImage,
-        slug: item?.product?.slug,
-        stockAvailabillity: item?.product?.inStock,
-      })
-    );
+      wishlist.map((item: any) =>
+        productArray.push({
+          id: item?.product?.id,
+          title: item?.product?.title,
+          price: item?.product?.price,
+          image: item?.product?.mainImage,
+          slug: item?.product?.slug,
+          stockAvailabillity: item?.product?.inStock,
+        })
+      );
 
-    setWishlist(productArray);
-  };
+      setWishlist(productArray);
+    },
+    [setWishlist]
+  );
 
   // getting user by email so I can get his user id
-  const getUserByEmail = async () => {
+  const getUserByEmail = useCallback(async () => {
     if (session?.user?.email) {
       fetch(`http://localhost:3001/api/users/email/${session?.user?.email}`, {
         cache: "no-store",
@@ -73,11 +76,11 @@ const Header = () => {
           getWishlistByUserId(data?.id);
         });
     }
-  };
+  }, [getWishlistByUserId, session?.user?.email]);
 
   useEffect(() => {
     getUserByEmail();
-  }, [session?.user?.email, wishlist.length]);
+  }, [session?.user?.email, wishlist.length, getUserByEmail]);
 
   return (
     <header className="bg-white">

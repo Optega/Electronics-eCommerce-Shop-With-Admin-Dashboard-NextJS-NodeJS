@@ -173,7 +173,7 @@ const CheckoutPage = () => {
       toast.error("У вас немає товарів у кошику");
       router.push("/cart");
     }
-  }, []);
+  }, [products.length, router]);
 
   return (
     <div className="bg-white">

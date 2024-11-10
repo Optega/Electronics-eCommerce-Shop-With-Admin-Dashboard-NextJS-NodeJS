@@ -47,7 +47,7 @@ const Filters = ({ minPrice = 0, maxPrice = 3000 }) => {
     params.set("sort", sortBy);
     params.set("page", page.toString());
     replace(`${pathname}?${params}`);
-  }, [inputCategory, sortBy, page]);
+  }, [inputCategory, sortBy, page, pathname, replace]);
 
   return (
     <div>

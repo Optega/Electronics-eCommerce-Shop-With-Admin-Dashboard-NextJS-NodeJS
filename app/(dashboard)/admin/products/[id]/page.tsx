@@ -7,7 +7,7 @@ import {
 } from "@/components";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import toast from "react-hot-toast";
 import {
@@ -117,7 +117,7 @@ const DashboardProductDetails = ({
   };
 
   // fetching main product data including other product images
-  const fetchProductData = async () => {
+  const fetchProductData = useCallback(async () => {
     fetch(`http://localhost:3001/api/products/${id}`)
       .then((res) => {
         return res.json();
@@ -131,7 +131,7 @@ const DashboardProductDetails = ({
     });
     const images = await imagesData.json();
     setOtherImages((currentImages) => images);
-  };
+  }, [id]);
 
   // fetching all product categories. It will be used for displaying categories in select category input
   const fetchCategories = async () => {
@@ -147,7 +147,7 @@ const DashboardProductDetails = ({
   useEffect(() => {
     fetchCategories();
     fetchProductData();
-  }, [id]);
+  }, [id, fetchProductData]);
 
   return (
     <div className="bg-white flex justify-start max-w-screen-2xl mx-auto xl:h-full max-xl:flex-col max-xl:gap-y-5">
