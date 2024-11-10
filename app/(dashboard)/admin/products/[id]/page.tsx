@@ -255,7 +255,7 @@ const DashboardProductDetails = ({
               {categories &&
                 categories.map((category: Category) => (
                   <option key={category?.id} value={category?.id}>
-                    {formatCategoryName(category?.name)}
+                    {formatCategoryName(category?.title)}
                   </option>
                 ))}
             </select>
