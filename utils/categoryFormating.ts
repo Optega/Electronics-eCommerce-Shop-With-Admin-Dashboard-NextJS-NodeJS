@@ -9,7 +9,7 @@ const formatCategoryName = (categoryName: string) => {
 // For example "smart watches" after this function will be "smart-watches"
 const convertCategoryNameToURLFriendly = (categoryName: string) => {
   const categoryNameArray = categoryName.split(" ");
-  return categoryNameArray.join("-");
+  return categoryNameArray.join("-").toLocaleLowerCase();
 };
 
 export { formatCategoryName, convertCategoryNameToURLFriendly };
