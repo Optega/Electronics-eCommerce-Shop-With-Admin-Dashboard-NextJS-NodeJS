@@ -3,6 +3,7 @@ import { CustomButton, DashboardSidebar, SectionTitle } from "@/components";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import Markdown from "react-markdown";
 import toast from "react-hot-toast";
 import {
   convertCategoryNameToURLFriendly as convertSlugToURLFriendly,
@@ -354,6 +355,15 @@ const DashboardProductDetails = ({
               }
             ></textarea>
           </label>
+        </div>
+
+        <div>
+          <div className="label">
+            <span className="label-text">Preview:</span>
+          </div>
+          <div className="prose max-w-full">
+            <Markdown>{product?.description || ""}</Markdown>
+          </div>
         </div>
         {/* Product description div - end */}
 

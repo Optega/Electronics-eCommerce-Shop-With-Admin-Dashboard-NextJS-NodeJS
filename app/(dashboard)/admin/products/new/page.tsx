@@ -4,6 +4,7 @@ import { convertCategoryNameToURLFriendly as convertSlugToURLFriendly } from "@/
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import Markdown from "react-markdown";
 
 const AddNewProduct = () => {
   const [product, setProduct] = useState<{
@@ -304,6 +305,15 @@ const AddNewProduct = () => {
               }
             ></textarea>
           </label>
+        </div>
+
+        <div>
+          <div className="label">
+            <span className="label-text">Preview:</span>
+          </div>
+          <div className="prose max-w-full">
+            <Markdown>{product?.description || ""}</Markdown>
+          </div>
         </div>
 
         <div>

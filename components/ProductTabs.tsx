@@ -11,6 +11,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Markdown from "react-markdown";
 
 const ProductTabs = ({ product }: { product: Product }) => {
   const [currentProductTab, setCurrentProductTab] = useState<number>(0);
@@ -41,9 +42,9 @@ const ProductTabs = ({ product }: { product: Product }) => {
       </div>
       <div className="pt-5">
         {currentProductTab === 0 && (
-          <p className="text-lg max-sm:text-base max-sm:text-sm">
-            {product?.description}
-          </p>
+          <div className="prose max-w-full">
+            <Markdown>{product.description}</Markdown>
+          </div>
         )}
 
         {currentProductTab === 1 && (
