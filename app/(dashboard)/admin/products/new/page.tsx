@@ -283,7 +283,7 @@ const AddNewProduct = () => {
           />
           {product?.mainImage && (
             <Image
-              src={`/` + product?.mainImage}
+              src={`/images/products/` + product?.mainImage}
               alt={product?.title}
               className="w-auto h-auto"
               width={100}

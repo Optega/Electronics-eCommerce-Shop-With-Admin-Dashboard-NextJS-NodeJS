@@ -316,7 +316,7 @@ const DashboardProductDetails = ({
           />
           {product?.mainImage && (
             <Image
-              src={`/` + product?.mainImage}
+              src={`/images/products/` + product?.mainImage}
               alt={product?.title}
               className="w-auto h-auto mt-2"
               width={100}
@@ -330,7 +330,7 @@ const DashboardProductDetails = ({
           {otherImages &&
             otherImages.map((image) => (
               <Image
-                src={`/${image.image}`}
+                src={`/images/products/${image.image}`}
                 key={nanoid()}
                 alt="product image"
                 width={100}
