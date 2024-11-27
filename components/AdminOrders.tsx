@@ -18,7 +18,7 @@ const AdminOrders = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const response = await fetch("http://localhost:3001/api/orders");
+      const response = await fetch("${process.env.BACKEND_URL}/api/orders");
       const data = await response.json();
       setOrders(data);
     };
@@ -67,7 +67,9 @@ const AdminOrders = () => {
                     <div className="flex items-center gap-5">
                       <div>
                         <div className="font-bold">{order?.name}</div>
-                        <div className="text-sm opacity-50">{order?.country}</div>
+                        <div className="text-sm opacity-50">
+                          {order?.country}
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -82,7 +84,9 @@ const AdminOrders = () => {
                     <p>${order?.total}</p>
                   </td>
 
-                  <td>{ new Date(Date.parse(order?.dateTime)).toDateString() }</td>
+                  <td>
+                    {new Date(Date.parse(order?.dateTime)).toDateString()}
+                  </td>
                   <th>
                     <Link
                       href={`/admin/orders/${order?.id}`}

@@ -24,13 +24,13 @@ const improveCategoryText = (text: string): string => {
 const ShopPage = async (slug: any) => {
   // sending API request for getting min and max prices of products
   const prices = await fetch(
-    `http://localhost:3001/api/products/min-max-prices`
+    `${process.env.BACKEND_URL}/api/products/min-max-prices`
   );
   const minMaxPrices = await prices.json();
 
   const getCategoryTitle = async (name: string) => {
     const category = await fetch(
-      `http://localhost:3001/api/categories/name/${name}`
+      `${process.env.BACKEND_URL}/api/categories/name/${name}`
     );
     const categoryData = await category?.json();
     return categoryData ? categoryData.title : null;

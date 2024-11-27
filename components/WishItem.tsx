@@ -43,27 +43,28 @@ const WishItem = ({
 
   const getUserByEmail = useCallback(async () => {
     if (session?.user?.email) {
-      fetch(`http://localhost:3001/api/users/email/${session?.user?.email}`, {
-        cache: "no-store",
-      })
+      fetch(
+        `${process.env.BACKEND_URL}/api/users/email/${session?.user?.email}`,
+        {
+          cache: "no-store",
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
           setUserId(data?.id);
         });
     }
-  }, [session?.user?.email])
+  }, [session?.user?.email]);
 
   const deleteItemFromWishlist = async (productId: string) => {
-    
     if (userId) {
-
-      fetch(`http://localhost:3001/api/wishlist/${userId}/${productId}`, {method: "DELETE"}).then(
-        (response) => {
-          removeFromWishlist(productId);
-          toast.success("Item removed from your wishlist");
-        }
-      );
-    }else{
+      fetch(`${process.env.BACKEND_URL}/api/wishlist/${userId}/${productId}`, {
+        method: "DELETE",
+      }).then((response) => {
+        removeFromWishlist(productId);
+        toast.success("Item removed from your wishlist");
+      });
+    } else {
       toast.error("You need to be logged in to perform this action");
     }
   };

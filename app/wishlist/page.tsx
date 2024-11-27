@@ -11,9 +11,12 @@ const WishlistPage = () => {
 
   const getWishlistByUserId = useCallback(
     async (id: string) => {
-      const response = await fetch(`http://localhost:3001/api/wishlist/${id}`, {
-        cache: "no-store",
-      });
+      const response = await fetch(
+        `${process.env.BACKEND_URL}/api/wishlist/${id}`,
+        {
+          cache: "no-store",
+        }
+      );
       const wishlist = await response.json();
 
       const productArray: {
@@ -43,9 +46,12 @@ const WishlistPage = () => {
 
   const getUserByEmail = useCallback(async () => {
     if (session?.user?.email) {
-      fetch(`http://localhost:3001/api/users/email/${session?.user?.email}`, {
-        cache: "no-store",
-      })
+      fetch(
+        `${process.env.BACKEND_URL}/api/users/email/${session?.user?.email}`,
+        {
+          cache: "no-store",
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
           getWishlistByUserId(data?.id);
