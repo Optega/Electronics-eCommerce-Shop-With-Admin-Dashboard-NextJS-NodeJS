@@ -37,6 +37,6 @@ yarn-error.log*
 next-env.d.ts
 
 # images
-/public/images/products/*
-/public/images/icons/*
-!/public/images/products/product_placeholder.jpg
+# /public/images/products/*
+# /public/images/icons/*
+# !/public/images/products/product_placeholder.jpg
