@@ -96,7 +96,7 @@ const AddNewProduct = () => {
 
     try {
       const response = await fetch(
-        "${process.env.BACKEND_URL}/api/main-image",
+        `${process.env.BACKEND_URL}/api/main-image`,
         {
           method: "POST",
           body: formData,

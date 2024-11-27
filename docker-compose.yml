@@ -1,0 +1,36 @@
+name: radiotech
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./server
+    ports:
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - ./server:/server
+    command: node app.js
+    networks:
+      - app-network
+
+  frontend:
+    container_name: app
+    build: .
+    ports:
+      - "3002:3000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - BACKEND_URL=http://192.168.137.137:3001
+    volumes:
+      - .:/app
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

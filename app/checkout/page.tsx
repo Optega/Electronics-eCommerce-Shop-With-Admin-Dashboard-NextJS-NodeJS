@@ -90,7 +90,7 @@ const CheckoutPage = () => {
       }
 
       // sending API request for creating a order
-      const response = fetch("${process.env.BACKEND_URL}/api/orders", {
+      const response = fetch(`${process.env.BACKEND_URL}/api/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -156,7 +156,7 @@ const CheckoutPage = () => {
   ) => {
     // sending API POST request for the table customer_order_product that does many to many relatioship for order and product
     const response = await fetch(
-      "${process.env.BACKEND_URL}/api/order-product",
+      `${process.env.BACKEND_URL}/api/order-product`,
       {
         method: "POST", // or 'PUT'
         headers: {
