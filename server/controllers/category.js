@@ -3,11 +3,12 @@ const prisma = new PrismaClient();
 
 async function createCategory(request, response) {
   try {
-    const { name, title } = request.body;
+    const { title, image, slug } = request.body;
     const category = await prisma.category.create({
       data: {
-        name,
         title,
+        image,
+        slug,
       },
     });
     return response.status(201).json(category);
@@ -20,7 +21,7 @@ async function createCategory(request, response) {
 async function updateCategory(request, response) {
   try {
     const { id } = request.params;
-    const { name, title } = request.body;
+    const { title, image, slug } = request.body;
 
     const existingCategory = await prisma.category.findUnique({
       where: {
@@ -37,8 +38,9 @@ async function updateCategory(request, response) {
         id: existingCategory.id,
       },
       data: {
-        name,
         title,
+        image,
+        slug,
       },
     });
 
@@ -76,11 +78,24 @@ async function getCategory(request, response) {
   return response.status(200).json(category);
 }
 
-async function getCategoryByName(request, response) {
-  const { name } = request.params;
+async function getCategoryByTitle(request, response) {
+  const { title } = request.params;
   const category = await prisma.category.findUnique({
     where: {
-      name: name,
+      title: title,
+    },
+  });
+  if (!category) {
+    return response.status(404).json({ error: "Category not found" });
+  }
+  return response.status(200).json(category);
+}
+
+async function getCategoryBySlug(request, response) {
+  const { slug } = request.params;
+  const category = await prisma.category.findUnique({
+    where: {
+      slug: slug,
     },
   });
   if (!category) {
@@ -103,6 +118,7 @@ module.exports = {
   updateCategory,
   deleteCategory,
   getCategory,
-  getCategoryByName,
+  getCategoryByTitle,
+  getCategoryBySlug,
   getAllCategories,
 };

@@ -8,17 +8,15 @@ const {
   updateCategory,
   deleteCategory,
   getAllCategories,
-  getCategoryByName,
+  getCategoryByTitle,
+  getCategoryBySlug,
 } = require("../controllers/category");
 
 router.route("/").get(getAllCategories).post(createCategory);
 
-router
-  .route("/:id")
-  .get(getCategory)
-  .put(updateCategory)
-  .delete(deleteCategory);
+router.route("/:id").get(getCategory).put(updateCategory).delete(deleteCategory);
 
-router.route("/name/:name").get(getCategoryByName);
+router.route("/title/:title").get(getCategoryByTitle);
+router.route("/slug/:slug").get(getCategoryBySlug);
 
 module.exports = router;
