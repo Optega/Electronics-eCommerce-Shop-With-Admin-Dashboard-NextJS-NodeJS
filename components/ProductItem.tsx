@@ -13,23 +13,12 @@ import React from "react";
 import Link from "next/link";
 import ProductItemRating from "./ProductItemRating";
 
-const ProductItem = ({
-  product,
-  color,
-}: {
-  product: Product;
-  color: string;
-}) => {
+const ProductItem = ({ product, color }: { product: Product; color: string }) => {
   return (
     <div className="flex flex-col items-center gap-y-2">
       <Link href={`/product/${product.slug}`}>
         <Image
-          src={
-            "/images/products" +
-            (product.mainImage
-              ? `/${product.mainImage}`
-              : "/product_placeholder.jpg")
-          }
+          src={"/images/products" + (product.mainImage ? `/${product.mainImage}` : "/product_placeholder.jpg")}
           width="0"
           height="0"
           sizes="100vw"
@@ -39,21 +28,13 @@ const ProductItem = ({
       </Link>
       <Link
         href={`/product/${product.slug}`}
-        className={
-          color === "black"
-            ? `text-xl text-black font-normal mt-2 uppercase`
-            : `text-xl text-white font-normal mt-2 uppercase`
-        }
+        className={`text-xl font-normal mt-2 uppercase h-14 text-ellipsis line-clamp-2 ${
+          color === "black" ? "text-black" : "text-white"
+        }`}
       >
         {product.title}
       </Link>
-      <p
-        className={
-          color === "black"
-            ? "text-lg text-black font-semibold"
-            : "text-lg text-white font-semibold"
-        }
-      >
+      <p className={color === "black" ? "text-lg text-black font-semibold" : "text-lg text-white font-semibold"}>
         ₴{product.price}
       </p>
 
