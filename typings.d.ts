@@ -42,8 +42,9 @@ interface OtherImages {
 
 interface Category {
   id: string;
-  name: string;
   title: string;
+  image: string;
+  slug: string;
 }
 
 interface User {
@@ -74,11 +75,6 @@ interface Order {
 interface SingleProductBtnProps {
   product: Product;
   quantityCount: number;
-}
-
-interface Category {
-  id: string;
-  name: string;
 }
 
 interface WishListItem {

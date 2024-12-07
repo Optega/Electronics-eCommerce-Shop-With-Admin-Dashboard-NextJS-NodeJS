@@ -1,9 +1,9 @@
 "use client";
 import { CustomButton, DashboardSidebar } from "@/components";
 import { nanoid } from "nanoid";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { formatCategoryName } from "../../../../utils/categoryFormating";
 
 const DashboardCategory = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -23,9 +23,7 @@ const DashboardCategory = () => {
     <div className="bg-white flex justify-start max-w-screen-2xl mx-auto h-full max-xl:flex-col max-xl:h-fit max-xl:gap-y-4">
       <DashboardSidebar />
       <div className="w-full">
-        <h1 className="text-3xl font-semibold text-center mb-5">
-          All Categories
-        </h1>
+        <h1 className="text-3xl font-semibold text-center mb-5">All Categories</h1>
         <div className="flex justify-end mb-5">
           <Link href="/admin/categories/new">
             <CustomButton
@@ -48,8 +46,9 @@ const DashboardCategory = () => {
                     <input type="checkbox" className="checkbox" />
                   </label>
                 </th>
-                <th>Name</th>
+                <th>Image</th>
                 <th>Title</th>
+                <th>Slug</th>
                 <th></th>
               </tr>
             </thead>
@@ -65,21 +64,24 @@ const DashboardCategory = () => {
 
                     <td>
                       <div>
-                        <p>{formatCategoryName(category?.name)}</p>
+                        <Image src={`/images/icons/${category?.image}`} width={48} height={48} alt={category?.title} />
                       </div>
                     </td>
 
                     <td>
                       <div>
-                        <p>{formatCategoryName(category?.title)}</p>
+                        <p>{category?.title}</p>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div>
+                        <p>{category?.slug}</p>
                       </div>
                     </td>
 
                     <th>
-                      <Link
-                        href={`/admin/categories/${category?.id}`}
-                        className="btn btn-ghost btn-xs"
-                      >
+                      <Link href={`/admin/categories/${category?.id}`} className="btn btn-ghost btn-xs">
                         details
                       </Link>
                     </th>
@@ -90,8 +92,9 @@ const DashboardCategory = () => {
             <tfoot>
               <tr>
                 <th></th>
-                <th>Name</th>
+                <th>Image</th>
                 <th>Title</th>
+                <th>Slug</th>
                 <th></th>
               </tr>
             </tfoot>

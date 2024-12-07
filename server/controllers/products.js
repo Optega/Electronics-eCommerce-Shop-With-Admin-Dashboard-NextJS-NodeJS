@@ -21,19 +21,14 @@ async function getAllProducts(request, response) {
     const page = Number(request.query.page) ? Number(request.query.page) : 1;
 
     if (dividerLocation !== -1) {
-      const queryArray = request.url
-        .substring(dividerLocation + 1, request.url.length)
-        .split("&");
+      const queryArray = request.url.substring(dividerLocation + 1, request.url.length).split("&");
 
       let filterType;
       let filterArray = [];
 
       for (let i = 0; i < queryArray.length; i++) {
         // checking whether it is filter mode or price filter
-        if (
-          queryArray[i].indexOf("filters") !== -1 &&
-          queryArray[i].indexOf("price") !== -1
-        ) {
+        if (queryArray[i].indexOf("filters") !== -1 && queryArray[i].indexOf("price") !== -1) {
           // taking price par. Of course I could write it much simpler: filterType="price"
           filterType = queryArray[i].substring(
             queryArray[i].indexOf("price"),
@@ -42,10 +37,7 @@ async function getAllProducts(request, response) {
         }
 
         // checking whether it is filter mode and rating filter
-        if (
-          queryArray[i].indexOf("filters") !== -1 &&
-          queryArray[i].indexOf("rating") !== -1
-        ) {
+        if (queryArray[i].indexOf("filters") !== -1 && queryArray[i].indexOf("rating") !== -1) {
           // taking "rating" part. Of course I could write it much simpler: filterType="rating"
           filterType = queryArray[i].substring(
             queryArray[i].indexOf("rating"),
@@ -54,18 +46,12 @@ async function getAllProducts(request, response) {
         }
 
         // checking whether it is filter mode and category filter
-        if (
-          queryArray[i].indexOf("filters") !== -1 &&
-          queryArray[i].indexOf("category") !== -1
-        ) {
+        if (queryArray[i].indexOf("filters") !== -1 && queryArray[i].indexOf("category") !== -1) {
           // getting "category" part
           filterType = "category";
         }
 
-        if (
-          queryArray[i].indexOf("filters") !== -1 &&
-          queryArray[i].indexOf("inStock") !== -1
-        ) {
+        if (queryArray[i].indexOf("filters") !== -1 && queryArray[i].indexOf("inStock") !== -1) {
           // getting "inStock" part.  Of course I could write it much simpler: filterType="inStock"
           filterType = queryArray[i].substring(
             queryArray[i].indexOf("inStock"),
@@ -73,10 +59,7 @@ async function getAllProducts(request, response) {
           );
         }
 
-        if (
-          queryArray[i].indexOf("filters") !== -1 &&
-          queryArray[i].indexOf("outOfStock") !== -1
-        ) {
+        if (queryArray[i].indexOf("filters") !== -1 && queryArray[i].indexOf("outOfStock") !== -1) {
           // getting "outOfStock" part.  Of course I could write it much simpler: filterType="outOfStock"
           filterType = queryArray[i].substring(
             queryArray[i].indexOf("outOfStock"),
@@ -95,18 +78,10 @@ async function getAllProducts(request, response) {
           // checking that it is not filter by category. I am doing it so I can avoid converting string to number
           if (queryArray[i].indexOf("category") === -1) {
             // taking value part. It is the part where number value of the query is located and I am converting it to the number type because it is string by default
-            filterValue = parseInt(
-              queryArray[i].substring(
-                queryArray[i].indexOf("=") + 1,
-                queryArray[i].length
-              )
-            );
+            filterValue = parseInt(queryArray[i].substring(queryArray[i].indexOf("=") + 1, queryArray[i].length));
           } else {
             // if it is filter by category
-            filterValue = queryArray[i].substring(
-              queryArray[i].indexOf("=") + 1,
-              queryArray[i].length
-            );
+            filterValue = queryArray[i].substring(queryArray[i].indexOf("=") + 1, queryArray[i].length);
           }
 
           // getting operator for example: lte, gte, gt, lt....
@@ -173,7 +148,7 @@ async function getAllProducts(request, response) {
         include: {
           category: {
             select: {
-              name: true,
+              slug: true,
             },
           },
         },
@@ -189,14 +164,14 @@ async function getAllProducts(request, response) {
           include: {
             category: {
               select: {
-                name: true,
+                slug: true,
               },
             },
           },
           where: {
             ...whereClause,
             category: {
-              name: {
+              slug: {
                 equals: filterObj.category.equals,
               },
             },
@@ -212,7 +187,7 @@ async function getAllProducts(request, response) {
           include: {
             category: {
               select: {
-                name: true,
+                slug: true,
               },
             },
           },
@@ -232,7 +207,7 @@ async function getAllProductsOld(request, response) {
       include: {
         category: {
           select: {
-            name: true,
+            slug: true,
           },
         },
       },
@@ -343,12 +318,11 @@ async function deleteProduct(request, response) {
     const { id } = request.params;
 
     // Check for related records in wishlist table
-    const relatedOrderProductItems =
-      await prisma.customer_order_product.findMany({
-        where: {
-          productId: id,
-        },
-      });
+    const relatedOrderProductItems = await prisma.customer_order_product.findMany({
+      where: {
+        productId: id,
+      },
+    });
     if (relatedOrderProductItems.length > 0) {
       return response.status(400).json({
         error: "Cannot delete product because of foreign key constraint. ",
@@ -371,9 +345,7 @@ async function searchProducts(request, response) {
   try {
     const { query } = request.query;
     if (!query) {
-      return response
-        .status(400)
-        .json({ error: "Query parameter is required" });
+      return response.status(400).json({ error: "Query parameter is required" });
     }
 
     const products = await prisma.product.findMany({
@@ -434,9 +406,7 @@ async function getMinMaxPrices(request, response) {
     return response.json({ minPrice, maxPrice });
   } catch (error) {
     console.error("Error getting min and max prices:", error);
-    return response
-      .status(500)
-      .json({ error: "Error getting min and max prices" });
+    return response.status(500).json({ error: "Error getting min and max prices" });
   }
 }
 

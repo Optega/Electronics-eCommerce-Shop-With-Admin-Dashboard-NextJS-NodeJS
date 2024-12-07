@@ -1,6 +1,6 @@
 "use client";
 import { Checkbox, DashboardSidebar } from "@/components";
-import { convertCategoryNameToURLFriendly as convertSlugToURLFriendly } from "@/utils/categoryFormating";
+import { convertCategoryTitleToSlugFriendly as convertSlugToURLFriendly } from "@/utils/categoryFormating";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -95,13 +95,10 @@ const AddNewProduct = () => {
     formData.append("uploadedFile", file);
 
     try {
-      const response = await fetch(
-        `${process.env.BACKEND_URL}/api/main-image`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch(`${process.env.BACKEND_URL}/api/main-image`, {
+        method: "POST",
+        body: formData,
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -154,9 +151,7 @@ const AddNewProduct = () => {
               type="text"
               className="input input-bordered w-full max-w-xs"
               value={product?.title || ""}
-              onChange={(e) =>
-                setProduct({ ...product, title: e.target.value })
-              }
+              onChange={(e) => setProduct({ ...product, title: e.target.value })}
             />
           </label>
         </div>
@@ -170,9 +165,7 @@ const AddNewProduct = () => {
               type="text"
               className="input input-bordered w-full max-w-xs"
               value={product?.price || "0"}
-              onChange={(e) =>
-                setProduct({ ...product, price: Number(e.target.value) })
-              }
+              onChange={(e) => setProduct({ ...product, price: Number(e.target.value) })}
             />
           </label>
         </div>
@@ -186,9 +179,7 @@ const AddNewProduct = () => {
               type="text"
               className="input input-bordered w-full max-w-xs"
               value={product?.manufacturer || ""}
-              onChange={(e) =>
-                setProduct({ ...product, manufacturer: e.target.value })
-              }
+              onChange={(e) => setProduct({ ...product, manufacturer: e.target.value })}
             />
           </label>
         </div>
@@ -201,9 +192,7 @@ const AddNewProduct = () => {
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
-              value={
-                (product?.slug && convertSlugToURLFriendly(product?.slug)) || ""
-              }
+              value={(product?.slug && convertSlugToURLFriendly(product?.slug)) || ""}
               onChange={(e) =>
                 setProduct({
                   ...product,
@@ -222,9 +211,7 @@ const AddNewProduct = () => {
             <select
               className="select select-bordered"
               value={product?.inStock || 1}
-              onChange={(e) =>
-                setProduct({ ...product, inStock: Number(e.target.value) })
-              }
+              onChange={(e) => setProduct({ ...product, inStock: Number(e.target.value) })}
             >
               <option value={1}>Yes</option>
               <option value={0}>No</option>
@@ -240,9 +227,7 @@ const AddNewProduct = () => {
             <select
               className="select select-bordered"
               value={product?.categoryId || categories[0]?.id}
-              onChange={(e) =>
-                setProduct({ ...product, categoryId: e.target.value })
-              }
+              onChange={(e) => setProduct({ ...product, categoryId: e.target.value })}
             >
               {categories &&
                 categories.map((category: any) => (
@@ -277,9 +262,7 @@ const AddNewProduct = () => {
               type="text"
               className="input input-bordered w-full max-w-xs"
               value={product?.reviewsCount || "0"}
-              onChange={(e) =>
-                setProduct({ ...product, reviewsCount: Number(e.target.value) })
-              }
+              onChange={(e) => setProduct({ ...product, reviewsCount: Number(e.target.value) })}
             />
           </label>
         </div>
@@ -312,9 +295,7 @@ const AddNewProduct = () => {
             <textarea
               className="textarea textarea-bordered h-24"
               value={product?.description}
-              onChange={(e) =>
-                setProduct({ ...product, description: e.target.value })
-              }
+              onChange={(e) => setProduct({ ...product, description: e.target.value })}
             ></textarea>
           </label>
         </div>
@@ -354,9 +335,7 @@ const AddNewProduct = () => {
                             setProduct({
                               ...product!,
                               attributes: product.attributes.map((attr) =>
-                                attr.name === attribute.name
-                                  ? { ...attr, name: e.target.value }
-                                  : attr
+                                attr.name === attribute.name ? { ...attr, name: e.target.value } : attr
                               ),
                             });
                           }}
@@ -371,9 +350,7 @@ const AddNewProduct = () => {
                             setProduct({
                               ...product!,
                               attributes: product.attributes.map((attr) =>
-                                attr.name === attribute.name
-                                  ? { ...attr, value: e.target.value }
-                                  : attr
+                                attr.name === attribute.name ? { ...attr, value: e.target.value } : attr
                               ),
                             });
                           }}
@@ -385,9 +362,7 @@ const AddNewProduct = () => {
                           onClick={() => {
                             setProduct({
                               ...product!,
-                              attributes: product.attributes.filter(
-                                (attr) => attr.name !== attribute.name
-                              ),
+                              attributes: product.attributes.filter((attr) => attr.name !== attribute.name),
                             });
                           }}
                         >
@@ -405,10 +380,7 @@ const AddNewProduct = () => {
                       onClick={() =>
                         setProduct({
                           ...product,
-                          attributes: [
-                            ...product.attributes,
-                            { name: "", value: "" },
-                          ],
+                          attributes: [...product.attributes, { name: "", value: "" }],
                         })
                       }
                     >
@@ -422,11 +394,7 @@ const AddNewProduct = () => {
         </div>
 
         <div>
-          <Checkbox
-            stateValue={addNew}
-            setStateValue={setAddNew}
-            text="Add new product?"
-          />
+          <Checkbox stateValue={addNew} setStateValue={setAddNew} text="Add new product?" />
         </div>
         <div className="flex gap-x-2">
           <button

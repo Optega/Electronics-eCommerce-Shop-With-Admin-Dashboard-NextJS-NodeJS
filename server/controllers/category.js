@@ -113,6 +113,24 @@ async function getAllCategories(request, response) {
   }
 }
 
+async function uploadCategoryImage(request, response) {
+  if (!request.files || Object.keys(request.files).length === 0) {
+    return response.status(400).json({ message: "No files uploaded." });
+  }
+
+  // Get file from a request
+  const uploadedFile = request.files.uploadedFile;
+
+  // Using mv method for moving file to the directory on the server
+  uploadedFile.mv("../public/images/icons/" + uploadedFile.name, (err) => {
+    if (err) {
+      return response.status(500).send(err);
+    }
+
+    response.status(200).json({ message: "File uploaded successfully" });
+  });
+}
+
 module.exports = {
   createCategory,
   updateCategory,
@@ -121,4 +139,5 @@ module.exports = {
   getCategoryByTitle,
   getCategoryBySlug,
   getAllCategories,
+  uploadCategoryImage,
 };

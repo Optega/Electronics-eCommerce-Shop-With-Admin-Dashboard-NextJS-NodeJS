@@ -3,22 +3,23 @@ import { DashboardSidebar } from "@/components";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { formatCategoryName } from "../../../../../utils/categoryFormating";
-import { convertCategoryNameToURLFriendly } from "../../../../../utils/categoryFormating";
+import { formatCategorySlug } from "@/utils/categoryFormating";
+import { convertCategoryTitleToSlugFriendly } from "@/utils/categoryFormating";
+import Image from "next/image";
 
 interface DashboardSingleCategoryProps {
   params: { id: number };
 }
 
-const DashboardSingleCategory = ({
-  params: { id },
-}: DashboardSingleCategoryProps) => {
+const DashboardSingleCategory = ({ params: { id } }: DashboardSingleCategoryProps) => {
   const [categoryInput, setCategoryInput] = useState<{
-    name: string;
     title: string;
+    image: string;
+    slug: string;
   }>({
-    name: "",
     title: "",
+    image: "",
+    slug: "",
   });
   const router = useRouter();
 
@@ -42,13 +43,16 @@ const DashboardSingleCategory = ({
   };
 
   const updateCategory = async () => {
-    if (categoryInput.name.length > 0) {
+    if (categoryInput.title.length > 0) {
       const requestOptions = {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: convertCategoryNameToURLFriendly(categoryInput.name),
           title: categoryInput.title,
+          image: categoryInput.image,
+          slug: convertCategoryTitleToSlugFriendly(
+            categoryInput.slug.length > 0 ? categoryInput.slug : categoryInput.title
+          ),
         }),
       };
       // sending API request for updating a category
@@ -70,6 +74,28 @@ const DashboardSingleCategory = ({
     }
   };
 
+  const uploadFile = async (file: any) => {
+    const formData = new FormData();
+    formData.append("uploadedFile", file);
+
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/categories/upload-image`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        toast.success("File uploaded successfully.");
+      } else {
+        toast.error("File upload unsuccessful.");
+      }
+    } catch (error) {
+      console.error("There was an error while during request sending:", error);
+      toast.error("There was an error during request sending");
+    }
+  };
+
   useEffect(() => {
     // sending API request for getting single categroy
     fetch(`${process.env.BACKEND_URL}/api/categories/${id}`)
@@ -78,8 +104,9 @@ const DashboardSingleCategory = ({
       })
       .then((data) => {
         setCategoryInput({
-          name: data?.name,
           title: data?.title,
+          image: data?.image,
+          slug: data?.slug,
         });
       });
   }, [id]);
@@ -92,30 +119,50 @@ const DashboardSingleCategory = ({
         <div className="flex flex-col gap-4 sm:flex-row">
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">Category name:</span>
-            </div>
-            <input
-              type="text"
-              className="input input-bordered w-full max-w-xs"
-              value={formatCategoryName(categoryInput.name)}
-              onChange={(e) =>
-                setCategoryInput({ ...categoryInput, name: e.target.value })
-              }
-            />
-          </label>
-          <label className="form-control w-full max-w-xs">
-            <div className="label">
               <span className="label-text">Category title:</span>
             </div>
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
               value={categoryInput.title}
-              onChange={(e) =>
-                setCategoryInput({ ...categoryInput, title: e.target.value })
-              }
+              onChange={(e) => setCategoryInput({ ...categoryInput, title: e.target.value })}
             />
           </label>
+          <label className="form-control w-full max-w-xs">
+            <div className="label">
+              <span className="label-text">Category slug:</span>
+            </div>
+            <input
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              value={formatCategorySlug(categoryInput.slug)}
+              onChange={(e) => setCategoryInput({ ...categoryInput, slug: e.target.value })}
+            />
+          </label>
+        </div>
+
+        <div>
+          <input
+            type="file"
+            className="file-input file-input-bordered file-input-lg w-full max-w-sm"
+            onChange={(e) => {
+              const selectedFile = e.target.files ? e.target.files[0] : null;
+
+              if (selectedFile) {
+                uploadFile(selectedFile);
+                setCategoryInput({ ...categoryInput, image: selectedFile.name });
+              }
+            }}
+          />
+          {categoryInput?.image && (
+            <Image
+              src={`/images/icons/` + categoryInput?.image}
+              alt={categoryInput?.title}
+              className="m-w-[100px] m-h-[100px] mt-2"
+              width={100}
+              height={100}
+            />
+          )}
         </div>
 
         <div className="flex gap-x-2 max-sm:flex-col">
@@ -135,8 +182,7 @@ const DashboardSingleCategory = ({
           </button>
         </div>
         <p className="text-xl text-error max-sm:text-lg">
-          Note: if you delete this category, you will delete all products
-          associated with the category.
+          Note: if you delete this category, you will delete all products associated with the category.
         </p>
       </div>
     </div>

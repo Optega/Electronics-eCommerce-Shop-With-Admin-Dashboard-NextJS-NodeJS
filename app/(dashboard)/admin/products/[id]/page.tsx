@@ -1,28 +1,20 @@
 "use client";
-import {
-  Checkbox,
-  CustomButton,
-  DashboardSidebar,
-  SectionTitle,
-} from "@/components";
+import { Checkbox, CustomButton, DashboardSidebar, SectionTitle } from "@/components";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import toast from "react-hot-toast";
 import {
-  convertCategoryNameToURLFriendly as convertSlugToURLFriendly,
-  formatCategoryName,
-} from "../../../../../utils/categoryFormating";
+  convertCategoryTitleToSlugFriendly as convertSlugToURLFriendly,
+} from "@/utils/categoryFormating";
 import { nanoid } from "nanoid";
 
 interface DashboardProductDetailsProps {
   params: { id: number };
 }
 
-const DashboardProductDetails = ({
-  params: { id },
-}: DashboardProductDetailsProps) => {
+const DashboardProductDetails = ({ params: { id } }: DashboardProductDetailsProps) => {
   const [product, setProduct] = useState<Product>();
   const [categories, setCategories] = useState<Category[]>();
   const [otherImages, setOtherImages] = useState<OtherImages[]>([]);
@@ -38,9 +30,7 @@ const DashboardProductDetails = ({
       .then((response) => {
         if (response.status !== 204) {
           if (response.status === 400) {
-            toast.error(
-              "Cannot delete the product because of foreign key constraint"
-            );
+            toast.error("Cannot delete the product because of foreign key constraint");
           } else {
             throw Error("There was an error while deleting product");
           }
@@ -99,13 +89,10 @@ const DashboardProductDetails = ({
     formData.append("uploadedFile", file);
 
     try {
-      const response = await fetch(
-        `${process.env.BACKEND_URL}/api/main-image`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch(`${process.env.BACKEND_URL}/api/main-image`, {
+        method: "POST",
+        body: formData,
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -129,12 +116,9 @@ const DashboardProductDetails = ({
         setProduct(data);
       });
 
-    const imagesData = await fetch(
-      `${process.env.BACKEND_URL}/api/images/${id}`,
-      {
-        cache: "no-store",
-      }
-    );
+    const imagesData = await fetch(`${process.env.BACKEND_URL}/api/images/${id}`, {
+      cache: "no-store",
+    });
     const images = await imagesData.json();
     setOtherImages((currentImages) => images);
   }, [id]);
@@ -170,9 +154,7 @@ const DashboardProductDetails = ({
               type="text"
               className="input input-bordered w-full max-w-xs"
               value={product?.title || ""}
-              onChange={(e) =>
-                setProduct({ ...product!, title: e.target.value })
-              }
+              onChange={(e) => setProduct({ ...product!, title: e.target.value })}
             />
           </label>
         </div>
@@ -188,9 +170,7 @@ const DashboardProductDetails = ({
               type="text"
               className="input input-bordered w-full max-w-xs"
               value={product?.price || "0"}
-              onChange={(e) =>
-                setProduct({ ...product!, price: Number(e.target.value) })
-              }
+              onChange={(e) => setProduct({ ...product!, price: Number(e.target.value) })}
             />
           </label>
         </div>
@@ -205,9 +185,7 @@ const DashboardProductDetails = ({
               type="text"
               className="input input-bordered w-full max-w-xs"
               value={product?.manufacturer || ""}
-              onChange={(e) =>
-                setProduct({ ...product!, manufacturer: e.target.value })
-              }
+              onChange={(e) => setProduct({ ...product!, manufacturer: e.target.value })}
             />
           </label>
         </div>
@@ -222,9 +200,7 @@ const DashboardProductDetails = ({
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
-              value={
-                (product?.slug && convertSlugToURLFriendly(product?.slug)) || ""
-              }
+              value={(product?.slug && convertSlugToURLFriendly(product?.slug)) || ""}
               onChange={(e) =>
                 setProduct({
                   ...product!,
@@ -274,7 +250,7 @@ const DashboardProductDetails = ({
               {categories &&
                 categories.map((category: Category) => (
                   <option key={category?.id} value={category?.id}>
-                    {formatCategoryName(category?.title)}
+                    {category?.title}
                   </option>
                 ))}
             </select>
@@ -368,9 +344,7 @@ const DashboardProductDetails = ({
             <textarea
               className="textarea textarea-bordered h-24"
               value={product?.description || ""}
-              onChange={(e) =>
-                setProduct({ ...product!, description: e.target.value })
-              }
+              onChange={(e) => setProduct({ ...product!, description: e.target.value })}
             ></textarea>
           </label>
         </div>
@@ -412,9 +386,7 @@ const DashboardProductDetails = ({
                             setProduct({
                               ...product!,
                               attributes: product.attributes.map((attr) =>
-                                attr.name === attribute.name
-                                  ? { ...attr, name: e.target.value }
-                                  : attr
+                                attr.name === attribute.name ? { ...attr, name: e.target.value } : attr
                               ),
                             });
                           }}
@@ -429,9 +401,7 @@ const DashboardProductDetails = ({
                             setProduct({
                               ...product!,
                               attributes: product.attributes.map((attr) =>
-                                attr.name === attribute.name
-                                  ? { ...attr, value: e.target.value }
-                                  : attr
+                                attr.name === attribute.name ? { ...attr, value: e.target.value } : attr
                               ),
                             });
                           }}
@@ -443,9 +413,7 @@ const DashboardProductDetails = ({
                           onClick={() => {
                             setProduct({
                               ...product!,
-                              attributes: product.attributes.filter(
-                                (attr) => attr.name !== attribute.name
-                              ),
+                              attributes: product.attributes.filter((attr) => attr.name !== attribute.name),
                             });
                           }}
                         >
@@ -463,10 +431,7 @@ const DashboardProductDetails = ({
                       onClick={() =>
                         setProduct({
                           ...product!,
-                          attributes: [
-                            ...(product?.attributes || []),
-                            { name: "", value: "" },
-                          ],
+                          attributes: [...(product?.attributes || []), { name: "", value: "" }],
                         })
                       }
                     >
@@ -481,11 +446,7 @@ const DashboardProductDetails = ({
         {/* Product attributes div - end */}
 
         <div>
-          <Checkbox
-            stateValue={addNew}
-            setStateValue={setAddNew}
-            text="Add new product?"
-          />
+          <Checkbox stateValue={addNew} setStateValue={setAddNew} text="Add new product?" />
         </div>
 
         {/* Action buttons div - start */}
@@ -507,8 +468,7 @@ const DashboardProductDetails = ({
         </div>
         {/* Action buttons div - end */}
         <p className="text-xl max-sm:text-lg text-error">
-          To delete the product you first need to delete all its records in
-          orders (customer_order_product table).
+          To delete the product you first need to delete all its records in orders (customer_order_product table).
         </p>
       </div>
     </div>
