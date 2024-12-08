@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./server
+    ports:
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - ./server:/server
+    command: node app.js
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
