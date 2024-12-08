@@ -1,5 +1,10 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+
+let prisma;
+
+if (!prisma) {
+  prisma = new PrismaClient();
+}
 
 async function uploadMainImage(req, res) {
   if (!req.files || Object.keys(req.files).length === 0) {

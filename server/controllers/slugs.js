@@ -1,5 +1,10 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+
+let prisma;
+
+if (!prisma) {
+  prisma = new PrismaClient();
+}
 
 async function getProductBySlug(request, response) {
   const { slug } = request.params;
@@ -8,7 +13,7 @@ async function getProductBySlug(request, response) {
       slug: slug,
     },
     include: {
-      category: true
+      category: true,
     },
   });
 

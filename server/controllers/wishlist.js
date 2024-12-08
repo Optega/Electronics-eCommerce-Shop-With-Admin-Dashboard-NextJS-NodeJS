@@ -1,6 +1,10 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
-const bcrypt = require("bcryptjs");
+
+let prisma;
+
+if (!prisma) {
+  prisma = new PrismaClient();
+}
 
 async function getAllWishlist(request, response) {
   try {
@@ -52,35 +56,33 @@ async function createWishItem(request, response) {
 async function deleteWishItem(request, response) {
   try {
     const { userId, productId } = request.params;
-    
+
     await prisma.wishlist.deleteMany({
       where: {
         userId: userId,
         productId: productId,
       },
     });
-    
-    return response.status(204).send();
 
+    return response.status(204).send();
   } catch (error) {
     console.log(error);
     return response.status(500).json({ error: "Error deleting wish item" });
   }
 }
 
-async function getSingleProductFromWishlist(request, response){
+async function getSingleProductFromWishlist(request, response) {
   try {
     const { userId, productId } = request.params;
-    
+
     const wishItem = await prisma.wishlist.findMany({
       where: {
         userId: userId,
         productId: productId,
       },
     });
-    
-    return response.status(200).json(wishItem);
 
+    return response.status(200).json(wishItem);
   } catch (error) {
     console.log(error);
     return response.status(500).json({ error: "Error getting wish item" });
@@ -90,26 +92,24 @@ async function getSingleProductFromWishlist(request, response){
 async function deleteAllWishItemByUserId(request, response) {
   try {
     const { userId } = request.params;
-    
+
     await prisma.wishlist.deleteMany({
       where: {
         userId: userId,
       },
     });
-    
-    return response.status(204).send();
 
+    return response.status(204).send();
   } catch (error) {
     console.log(error);
     return response.status(500).json({ error: "Error deleting wish item" });
   }
 }
 
-
 module.exports = {
   getAllWishlistByUserId,
   getAllWishlist,
   createWishItem,
   deleteWishItem,
-  getSingleProductFromWishlist
+  getSingleProductFromWishlist,
 };

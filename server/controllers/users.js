@@ -1,6 +1,11 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
 const bcrypt = require("bcryptjs");
+
+let prisma;
+
+if (!prisma) {
+  prisma = new PrismaClient();
+}
 
 async function getAllUsers(request, response) {
   try {

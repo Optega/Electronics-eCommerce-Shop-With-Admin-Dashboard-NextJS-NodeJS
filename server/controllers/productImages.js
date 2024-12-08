@@ -1,5 +1,10 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+
+let prisma;
+
+if (!prisma) {
+  prisma = new PrismaClient();
+}
 
 async function getSingleProductImages(request, response) {
   const { id } = request.params;
@@ -42,9 +47,7 @@ async function updateImage(request, response) {
 
     // if photo doesn't exist, return coresponding status code
     if (!existingImage) {
-      return response
-        .status(404)
-        .json({ error: "Image not found for the provided productID" });
+      return response.status(404).json({ error: "Image not found for the provided productID" });
     }
 
     // Updating photo using coresponding imageID
@@ -79,8 +82,6 @@ async function deleteImage(request, response) {
     return response.status(500).json({ error: "Error deleting image" });
   }
 }
-
-
 
 module.exports = {
   getSingleProductImages,
