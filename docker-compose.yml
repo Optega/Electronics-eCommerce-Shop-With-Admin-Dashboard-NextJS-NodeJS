@@ -10,7 +10,7 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - NEXTAUTH_URL=${NEXTAUTH_URL}
-      - BACKEND_URL=http://backend:3001
+      - BACKEND_URL=${BACKEND_URL}
     networks:
       - app-network
 
