@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies
-RUN npm install
+RUN npm ci --only=production
 RUN npx prisma generate 
 
 # Build the application
