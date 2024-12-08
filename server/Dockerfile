@@ -1,18 +1,23 @@
-# Use the official Node.js image as the base image
+# Використовуємо офіційний образ Node.js
 FROM node:18-alpine
 
-# Set the working directory
+# Встановлюємо робочу директорію
 WORKDIR /server
 
-# Copy the rest of the application code
+# Копіюємо package.json і package-lock.json для встановлення залежностей
+COPY package*.json ./
+
+# Встановлюємо залежності
+RUN npm ci --only=production
+
+# Копіюємо решту коду додатку
 COPY . .
 
-# Install dependencies
-RUN npm ci --only=production
-RUN npx prisma generate 
+# Генеруємо Prisma клієнт
+RUN npx prisma generate
 
-# Expose the port the app runs on
+# Відкриваємо порт
 EXPOSE 3001
 
-# Start the application
+# Запускаємо додаток
 CMD ["node", "app.js"]
