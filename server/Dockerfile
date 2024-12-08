@@ -8,7 +8,7 @@ WORKDIR /server
 COPY package*.json ./
 
 # Встановлюємо залежності
-RUN npm ci --only=production
+RUN npm ci
 
 # Копіюємо решту коду додатку
 COPY . .
