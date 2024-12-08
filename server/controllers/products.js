@@ -1,220 +1,63 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
 
-async function getAllProducts(request, response) {
-  const mode = request.query.mode || "";
-  // checking if we are on the admin products page because we don't want to have filtering, sorting and pagination there
-  if (mode === "admin") {
-    try {
-      const adminProducts = await prisma.product.findMany({});
-      return response.json(adminProducts);
-    } catch (error) {
-      return response.status(500).json({ error: "Error fetching products" });
-    }
-  } else {
-    const dividerLocation = request.url.indexOf("?");
-    let filterObj = {};
-    let sortObj = {};
-    let sortByValue = "defaultSort";
+let prisma;
 
-    // getting current page
-    const page = Number(request.query.page) ? Number(request.query.page) : 1;
-
-    if (dividerLocation !== -1) {
-      const queryArray = request.url.substring(dividerLocation + 1, request.url.length).split("&");
-
-      let filterType;
-      let filterArray = [];
-
-      for (let i = 0; i < queryArray.length; i++) {
-        // checking whether it is filter mode or price filter
-        if (queryArray[i].indexOf("filters") !== -1 && queryArray[i].indexOf("price") !== -1) {
-          // taking price par. Of course I could write it much simpler: filterType="price"
-          filterType = queryArray[i].substring(
-            queryArray[i].indexOf("price"),
-            queryArray[i].indexOf("price") + "price".length
-          );
-        }
-
-        // checking whether it is filter mode and rating filter
-        if (queryArray[i].indexOf("filters") !== -1 && queryArray[i].indexOf("rating") !== -1) {
-          // taking "rating" part. Of course I could write it much simpler: filterType="rating"
-          filterType = queryArray[i].substring(
-            queryArray[i].indexOf("rating"),
-            queryArray[i].indexOf("rating") + "rating".length
-          );
-        }
-
-        // checking whether it is filter mode and category filter
-        if (queryArray[i].indexOf("filters") !== -1 && queryArray[i].indexOf("category") !== -1) {
-          // getting "category" part
-          filterType = "category";
-        }
-
-        if (queryArray[i].indexOf("filters") !== -1 && queryArray[i].indexOf("inStock") !== -1) {
-          // getting "inStock" part.  Of course I could write it much simpler: filterType="inStock"
-          filterType = queryArray[i].substring(
-            queryArray[i].indexOf("inStock"),
-            queryArray[i].indexOf("inStock") + "inStock".length
-          );
-        }
-
-        if (queryArray[i].indexOf("filters") !== -1 && queryArray[i].indexOf("outOfStock") !== -1) {
-          // getting "outOfStock" part.  Of course I could write it much simpler: filterType="outOfStock"
-          filterType = queryArray[i].substring(
-            queryArray[i].indexOf("outOfStock"),
-            queryArray[i].indexOf("outOfStock") + "outOfStock".length
-          );
-        }
-
-        if (queryArray[i].indexOf("sort") !== -1) {
-          // getting sort value from the query
-          sortByValue = queryArray[i].substring(queryArray[i].indexOf("=") + 1);
-        }
-
-        // checking whether in the given query filters mode is on
-        if (queryArray[i].indexOf("filters") !== -1) {
-          let filterValue;
-          // checking that it is not filter by category. I am doing it so I can avoid converting string to number
-          if (queryArray[i].indexOf("category") === -1) {
-            // taking value part. It is the part where number value of the query is located and I am converting it to the number type because it is string by default
-            filterValue = parseInt(queryArray[i].substring(queryArray[i].indexOf("=") + 1, queryArray[i].length));
-          } else {
-            // if it is filter by category
-            filterValue = queryArray[i].substring(queryArray[i].indexOf("=") + 1, queryArray[i].length);
-          }
-
-          // getting operator for example: lte, gte, gt, lt....
-          const filterOperator = queryArray[i].substring(
-            queryArray[i].indexOf("$") + 1,
-            queryArray[i].indexOf("=") - 1
-          );
-
-          // All of it I add to the filterArray
-          // example for current state of filterArray:
-          /*
-                  [
-                  { filterType: 'price', filterOperator: 'lte', filterValue: 3000 },
-                  { filterType: 'rating', filterOperator: 'gte', filterValue: 0 }
-                  ]
-                  */
-          filterArray.push({ filterType, filterOperator, filterValue });
-        }
-      }
-      for (let item of filterArray) {
-        filterObj = {
-          ...filterObj,
-          [item.filterType]: {
-            [item.filterOperator]: item.filterValue,
-          },
-        };
-      }
-    }
-
-    let whereClause = { ...filterObj }; // Include other filters if any
-
-    // Remove category filter from whereClause and use it separately
-    if (filterObj.category && filterObj.category.equals) {
-      delete whereClause.category; // Remove category filter from whereClause
-    }
-
-    if (sortByValue === "defaultSort") {
-      sortObj = {};
-    } else if (sortByValue === "titleAsc") {
-      sortObj = {
-        title: "asc",
-      };
-    } else if (sortByValue === "titleDesc") {
-      sortObj = {
-        title: "desc",
-      };
-    } else if (sortByValue === "lowPrice") {
-      sortObj = {
-        price: "asc",
-      };
-    } else if (sortByValue === "highPrice") {
-      sortObj = {
-        price: "desc",
-      };
-    }
-
-    let products;
-
-    if (Object.keys(filterObj).length === 0) {
-      products = await prisma.product.findMany({
-        // this is formula for pagination: (page - 1) * limit(take)
-        skip: (page - 1) * 10,
-        take: 12,
-        include: {
-          category: {
-            select: {
-              slug: true,
-            },
-          },
-        },
-        orderBy: sortObj,
-      });
-    } else {
-      // Check if category filter is present
-      if (filterObj.category && filterObj.category.equals) {
-        products = await prisma.product.findMany({
-          // this is formula for pagination: (page - 1) * limit(take)
-          skip: (page - 1) * 10,
-          take: 12,
-          include: {
-            category: {
-              select: {
-                slug: true,
-              },
-            },
-          },
-          where: {
-            ...whereClause,
-            category: {
-              slug: {
-                equals: filterObj.category.equals,
-              },
-            },
-          },
-          orderBy: sortObj,
-        });
-      } else {
-        // If no category filter, use whereClause
-        products = await prisma.product.findMany({
-          // this is formula for pagination: (page - 1) * limit(take)
-          skip: (page - 1) * 10,
-          take: 12,
-          include: {
-            category: {
-              select: {
-                slug: true,
-              },
-            },
-          },
-          where: whereClause,
-          orderBy: sortObj,
-        });
-      }
-    }
-
-    return response.json(products);
-  }
+if (!prisma) {
+  prisma = new PrismaClient();
 }
 
-async function getAllProductsOld(request, response) {
+async function getAllProducts(request, response) {
+  const { page = 1, sort = "defaultSort", price, rating, inStock, category } = request.query;
+  const parsedPage = parseInt(page, 10);
+
+  // Переконатися, що ці фільтри є числами
+  const parsedPrice = parseInt(price, 10) || 0;
+  const parsedRating = parseInt(rating, 10) || 0;
+  const parsedInStock = inStock || "gte";
+
+  // Створення об'єкта для умов фільтрації
+  const whereClause = {
+    price: {
+      lte: parsedPrice,
+    },
+    rating: {
+      gte: parsedRating,
+    },
+    inStock: {
+      [parsedInStock]: 0,
+    },
+    ...(category && { category: { slug: category } }), // Якщо є фільтр по категорії
+  };
+
+  // Створення об'єкта для сортування
+  let sortObj = {};
+  if (sort === "titleAsc") {
+    sortObj = { title: "asc" };
+  } else if (sort === "titleDesc") {
+    sortObj = { title: "desc" };
+  } else if (sort === "lowPrice") {
+    sortObj = { price: "asc" };
+  } else if (sort === "highPrice") {
+    sortObj = { price: "desc" };
+  } else {
+    sortObj = {}; // Default sorting
+  }
+
   try {
     const products = await prisma.product.findMany({
+      where: whereClause,
+      skip: (parsedPage - 1) * 12, // Для пагінації
+      take: 12,
+      orderBy: sortObj,
       include: {
-        category: {
-          select: {
-            slug: true,
-          },
-        },
+        category: true,
       },
     });
-    response.status(200).json(products);
+
+    return response.json(products);
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching products:", error);
+    return response.status(500).json({ error: "Error fetching products" });
   }
 }
 

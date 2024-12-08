@@ -9,11 +9,11 @@
 // *********************
 
 "use client";
-import React, { useEffect, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSortStore } from "@/app/_zustand/sortStore";
 import { usePaginationStore } from "@/app/_zustand/paginationStore";
+import { useFilterStore } from "@/app/_zustand/filterStore";
+import { debounce } from "@/utils/actions";
 
 interface InputCategory {
   inStock: { text: string; isChecked: boolean };
@@ -22,12 +22,10 @@ interface InputCategory {
   ratingFilter: { text: string; value: number };
 }
 
-const Filters = ({ minPrice = 0, maxPrice = 3000 }) => {
-  const pathname = usePathname();
-  const { replace } = useRouter();
-
-  // getting current page number from Zustand store
+const Filters = ({ minPrice = 0, maxPrice = 0 }) => {
+  const { filters, setFilters } = useFilterStore();
   const { page } = usePaginationStore();
+  const { sortBy } = useSortStore();
 
   const [inputCategory, setInputCategory] = useState<InputCategory>({
     inStock: { text: "instock", isChecked: true },
@@ -35,23 +33,61 @@ const Filters = ({ minPrice = 0, maxPrice = 3000 }) => {
     priceFilter: { text: "price", value: maxPrice },
     ratingFilter: { text: "rating", value: 0 },
   });
-  const { sortBy } = useSortStore();
+
+  const debouncedSetFilters: (newFilters: typeof filters) => void = useCallback(
+    debounce((newFilters: typeof filters) => {
+      setFilters(newFilters);
+    }, 300),
+    []
+  );
 
   useEffect(() => {
-    const params = new URLSearchParams();
-    // setting URL params and after that putting them all in URL
-    params.set("outOfStock", inputCategory.outOfStock.isChecked.toString());
-    params.set("inStock", inputCategory.inStock.isChecked.toString());
-    params.set("rating", inputCategory.ratingFilter.value.toString());
-    params.set("price", inputCategory.priceFilter.value.toString());
-    params.set("sort", sortBy);
-    params.set("page", page.toString());
-    replace(`${pathname}?${params}`);
-  }, [inputCategory, sortBy, page, pathname, replace]);
+    debouncedSetFilters({
+      ...filters,
+      outOfStock: inputCategory.outOfStock.isChecked,
+      inStock: inputCategory.inStock.isChecked,
+      rating: inputCategory.ratingFilter.value,
+      price: inputCategory.priceFilter.value,
+      sort: sortBy,
+      page,
+    });
+  }, [inputCategory, sortBy, page]);
+
+  useEffect(() => {
+    setInputCategory({
+      ...inputCategory,
+      priceFilter: {
+        text: "price",
+        value: maxPrice,
+      },
+    });
+  }, [minPrice, maxPrice]);
+
+  const handlePriceChange = (value: number) => {
+    setInputCategory((prev) => ({
+      ...prev,
+      priceFilter: {
+        text: "price",
+        value,
+      },
+    }));
+  };
+
+  const handleRatingChange = (value: number) => {
+    setInputCategory((prev) => ({
+      ...prev,
+      ratingFilter: {
+        text: "rating",
+        value,
+      },
+    }));
+  };
 
   return (
     <div>
-      <h3 className="text-2xl mb-2">Фільтри</h3>
+      <div className="flex justify-between items-center h-8 lg:h-12">
+        <h2 className="text-2xl font-bold max-sm:text-xl max-[400px]:text-lg uppercase">Фільтри</h2>
+      </div>
       <div className="divider"></div>
       <div className="flex flex-col gap-y-1">
         <h3 className="text-xl mb-2">Наявність</h3>
@@ -71,9 +107,7 @@ const Filters = ({ minPrice = 0, maxPrice = 3000 }) => {
               }
               className="checkbox"
             />
-            <span className="label-text text-lg ml-2 text-black">
-              В наявності
-            </span>
+            <span className="label-text text-lg ml-2 text-black">В наявності</span>
           </label>
         </div>
 
@@ -93,9 +127,7 @@ const Filters = ({ minPrice = 0, maxPrice = 3000 }) => {
               }
               className="checkbox"
             />
-            <span className="label-text text-lg ml-2 text-black">
-              Закінчились
-            </span>
+            <span className="label-text text-lg ml-2 text-black">Закінчились</span>
           </label>
         </div>
       </div>
@@ -108,18 +140,10 @@ const Filters = ({ minPrice = 0, maxPrice = 3000 }) => {
             type="range"
             min={minPrice}
             max={maxPrice}
-            step={1}
+            step={10}
             value={inputCategory.priceFilter.value}
             className="range"
-            onChange={(e) =>
-              setInputCategory({
-                ...inputCategory,
-                priceFilter: {
-                  text: "price",
-                  value: Number(e.target.value),
-                },
-              })
-            }
+            onChange={(e) => handlePriceChange(Number(e.target.value))}
           />
           <span>{`Макс ціна: ₴${inputCategory.priceFilter.value}`}</span>
         </div>
@@ -134,12 +158,7 @@ const Filters = ({ minPrice = 0, maxPrice = 3000 }) => {
           min={0}
           max="5"
           value={inputCategory.ratingFilter.value}
-          onChange={(e) =>
-            setInputCategory({
-              ...inputCategory,
-              ratingFilter: { text: "rating", value: Number(e.target.value) },
-            })
-          }
+          onChange={(e) => handleRatingChange(Number(e.target.value))}
           className="range range-info"
           step="1"
         />

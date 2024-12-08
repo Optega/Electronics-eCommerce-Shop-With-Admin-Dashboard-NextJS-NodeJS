@@ -12,7 +12,7 @@ import Link from "next/link";
 import React from "react";
 import { FaHouse } from "react-icons/fa6";
 
-const Breadcrumb = () => {
+const Breadcrumb = ({ title }: { title?: string | null }) => {
   return (
     <div className="text-lg breadcrumbs pb-10 py-5 max-sm:text-base">
       <ul>
@@ -23,11 +23,16 @@ const Breadcrumb = () => {
           </Link>
         </li>
         <li>
-          <Link href="/shop">Каталог</Link>
+          <Link href="/categories">Категорії</Link>
         </li>
         <li>
           <Link href="/shop">Всі товари</Link>
         </li>
+        {title && (
+          <li>
+            <span>{title}</span>
+          </li>
+        )}
       </ul>
     </div>
   );

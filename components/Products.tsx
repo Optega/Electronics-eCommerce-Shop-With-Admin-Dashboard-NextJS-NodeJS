@@ -1,73 +1,91 @@
-// *********************
-// Role of the component: Showing products on the shop page with applied filter and sort
-// Name of the component: Products.tsx
-// Developer: Aleksandar Kuzmanovic
-// Version: 1.0
-// Component call: <Products slug={slug} />
-// Input parameters: { slug }: any
-// Output: products grid
-// *********************
-
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import ProductItem from "./ProductItem";
+import { useFilterStore } from "@/app/_zustand/filterStore";
+import { usePaginationStore } from "@/app/_zustand/paginationStore";
 
-const Products = async ({ slug }: any) => {
-  // getting all data from URL slug and preparing everything for sending GET request
-  const inStockNum = slug?.searchParams?.inStock === "true" ? 1 : 0;
-  const outOfStockNum = slug?.searchParams?.outOfStock === "true" ? 1 : 0;
-  const page = slug?.searchParams?.page ? Number(slug?.searchParams?.page) : 1;
+const Products = ({ category, maxPrice }: { category: string | null; maxPrice?: number }) => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const { filters } = useFilterStore();
+  const { setOrdersCount } = usePaginationStore();
 
-  let stockMode: string = "lte";
+  useEffect(() => {
+    // getting all data from URL slug and preparing everything for sending GET request
+    const price = filters?.price || maxPrice || 0;
+    const rating = filters?.rating || 0;
+    const inStockNum = filters?.inStock ? true : false;
+    const outOfStockNum = filters?.outOfStock ? 1 : 0;
+    const sort = filters?.sort || "defaultSort";
+    const page = filters?.page ? Number(filters?.page) : 1;
 
-  // preparing inStock and out of stock filter for GET request
-  // If in stock checkbox is checked, stockMode is "equals"
-  if (inStockNum === 1) {
-    stockMode = "equals";
+    let stockMode = "not";
+
+    // preparing inStock and out of stock filter for GET request
+    if (inStockNum) {
+      stockMode = "not";
+    }
+    if (outOfStockNum) {
+      stockMode = "equals";
+    }
+    if (inStockNum && outOfStockNum) {
+      stockMode = "gte";
+    }
+    if (!inStockNum && !outOfStockNum) {
+      stockMode = "lt";
+    }
+
+    // Sending API request with filtering, sorting and pagination for getting all products
+    const fetchProducts = async () => {
+      try {
+        const url = new URL(`${process.env.BACKEND_URL}/api/products`);
+
+        const searchParams = new URLSearchParams();
+        searchParams.set("price", price.toString());
+        searchParams.set("rating", rating.toString());
+        searchParams.set("inStock", stockMode);
+        searchParams.set("category", category || "");
+        searchParams.set("sort", sort);
+        searchParams.set("page", page.toString());
+
+        url.search = searchParams.toString();
+
+        const response = await fetch(url.toString());
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+
+        const data = await response.json();
+        setOrdersCount(data.length);
+        setProducts(data);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message || "An error occurred while fetching products");
+        } else {
+          setError("An error occurred while fetching products");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [filters, category]);
+
+  if (loading) {
+    return <div className="text-center">Loading products...</div>;
   }
-  // If out of stock checkbox is checked, stockMode is "lt"
-  if (outOfStockNum === 1) {
-    stockMode = "lt";
-  }
-  // If in stock and out of stock checkboxes are checked, stockMode is "lte"
-  if (inStockNum === 1 && outOfStockNum === 1) {
-    stockMode = "lte";
-  }
-  // If in stock and out of stock checkboxes aren't checked, stockMode is "gt"
-  if (inStockNum === 0 && outOfStockNum === 0) {
-    stockMode = "gt";
+
+  if (error) {
+    return <div className="text-center text-red-500">{error}</div>;
   }
 
-  // sending API request with filtering, sorting and pagination for getting all products
-  const data = await fetch(
-    `${process.env.BACKEND_URL}/api/products?filters[price][$lte]=${
-      slug?.searchParams?.price || 3000
-    }&filters[rating][$gte]=${
-      Number(slug?.searchParams?.rating) || 0
-    }&filters[inStock][$${stockMode}]=1&${
-      slug?.params?.slug?.length > 0
-        ? `filters[category][$equals]=${slug?.params?.slug}&`
-        : ""
-    }sort=${slug?.searchParams?.sort}&page=${page}`
-  );
-
-  const products = await data.json();
-
-  /*
-    const req = await fetch(
-    `http://localhost:1337/api/products?populate=*&filters[price][$lte]=${
-      searchParams?.price || 1000
-    }${searchParams.women === "true" ? "&filters[category][$eq]=women" : ""}${searchParams.womenNewEdition === "true" ? "&filters[category][$eq]=women%20new%20edition" : ""}&filters[rating][$gte]=${
-      searchParams?.rating || 1
-    }`
-  );
-  const products = await req.json();
-  */
   return (
     <div className="grid grid-cols-3 justify-items-center gap-x-2 gap-y-5 max-[1300px]:grid-cols-3 max-lg:grid-cols-2 max-[500px]:grid-cols-1">
       {products.length > 0 ? (
-        products.map((product: Product) => (
-          <ProductItem key={product.id} product={product} color="black" />
-        ))
+        products.map((product: Product) => <ProductItem key={product.id} product={product} color="black" />)
       ) : (
         <h3 className="text-3xl mt-5 text-center w-full col-span-full max-[1000px]:text-2xl max-[500px]:text-lg">
           Немає товарів за вибраними фільтрами
