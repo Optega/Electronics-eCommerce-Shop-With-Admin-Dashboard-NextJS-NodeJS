@@ -13,7 +13,7 @@ RUN npm ci
 # Копіюємо решту коду додатку
 COPY . .
 
-RUN npx prisma migrate deploy --create-only
+RUN npx prisma migrate deploy
 
 # Відкриваємо порт
 EXPOSE 3001
