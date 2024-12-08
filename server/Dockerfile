@@ -14,7 +14,7 @@ RUN npm ci
 COPY . .
 
 # Генеруємо Prisma клієнт
-RUN npx prisma generate
+RUN npx prisma migrate dev
 
 # Відкриваємо порт
 EXPOSE 3001

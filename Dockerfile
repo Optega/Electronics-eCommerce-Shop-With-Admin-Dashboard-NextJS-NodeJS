@@ -14,7 +14,7 @@ RUN npm ci
 COPY . .
 
 # Генеруємо Prisma клієнт (якщо необхідно)
-RUN npx prisma generate
+RUN npx prisma migrate dev
 
 # Будуємо додаток
 RUN npm run build
