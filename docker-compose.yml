@@ -12,8 +12,8 @@ services:
       - NEXTAUTH_URL=${NEXTAUTH_URL}
       - BACKEND_URL=${BACKEND_URL}
     networks:
-      - host_network
+      - host
 
 networks:
-  host_network:
+  host:
     external: true

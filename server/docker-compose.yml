@@ -10,8 +10,8 @@ services:
       - DATABASE_URL=${DATABASE_URL}
     command: node app.js
     networks:
-      - host_network
+      - host
 
 networks:
-  host_network:
+  host:
     external: true
