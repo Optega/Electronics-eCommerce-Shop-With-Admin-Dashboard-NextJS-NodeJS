@@ -7,19 +7,23 @@ if (!prisma) {
 }
 
 async function getAllProducts(request, response) {
-  const { page = 1, sort = "defaultSort", price, rating, inStock, category } = request.query;
-  const parsedPage = parseInt(page, 10);
+  const { page, limit, sort, price, rating, inStock, category } = request.query;
 
-  // Переконатися, що ці фільтри є числами
+  // Переконатися, що ці фільтри існують
+  const parsedPage = parseInt(page, 10) || 1;
+  const parsedLimit = parseInt(limit, 10) || 12;
+  const parsedSort = sort || "defaultSort";
   const parsedPrice = parseInt(price, 10) || 0;
   const parsedRating = parseInt(rating, 10) || 0;
   const parsedInStock = inStock || "gte";
 
   // Створення об'єкта для умов фільтрації
   const whereClause = {
-    price: {
-      lte: parsedPrice,
-    },
+    ...(parsedPrice !== 0 && {
+      price: {
+        lte: parsedPrice,
+      },
+    }),
     rating: {
       gte: parsedRating,
     },
@@ -31,14 +35,18 @@ async function getAllProducts(request, response) {
 
   // Створення об'єкта для сортування
   let sortObj = {};
-  if (sort === "titleAsc") {
+  if (parsedSort === "titleAsc") {
     sortObj = { title: "asc" };
-  } else if (sort === "titleDesc") {
+  } else if (parsedSort === "titleDesc") {
     sortObj = { title: "desc" };
-  } else if (sort === "lowPrice") {
+  } else if (parsedSort === "lowPrice") {
     sortObj = { price: "asc" };
-  } else if (sort === "highPrice") {
+  } else if (parsedSort === "highPrice") {
     sortObj = { price: "desc" };
+  } else if (parsedSort === "oldest") {
+    sortObj = { createdAt: "asc" };
+  } else if (parsedSort === "latest") {
+    sortObj = { createdAt: "desc" };
   } else {
     sortObj = {}; // Default sorting
   }
@@ -46,8 +54,8 @@ async function getAllProducts(request, response) {
   try {
     const products = await prisma.product.findMany({
       where: whereClause,
-      skip: (parsedPage - 1) * 12, // Для пагінації
-      take: 12,
+      skip: (parsedPage - 1) * parsedLimit, // Для пагінації
+      take: parsedLimit,
       orderBy: sortObj,
       include: {
         category: true,
