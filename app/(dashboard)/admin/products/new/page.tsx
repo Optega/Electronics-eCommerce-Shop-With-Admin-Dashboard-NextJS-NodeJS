@@ -226,9 +226,12 @@ const AddNewProduct = () => {
             </div>
             <select
               className="select select-bordered"
-              value={product?.categoryId || categories[0]?.id}
+              value={product?.categoryId || ""}
               onChange={(e) => setProduct({ ...product, categoryId: e.target.value })}
             >
+              <option value="" disabled>
+                {"Select a category"}
+              </option>
               {categories &&
                 categories.map((category: any) => (
                   <option key={category?.id} value={category?.id}>
