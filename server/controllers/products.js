@@ -83,6 +83,7 @@ async function createProduct(request, response) {
       sku,
       reviewsCount,
       attributes,
+      unit,
     } = request.body;
     const product = await prisma.product.create({
       data: {
@@ -98,6 +99,7 @@ async function createProduct(request, response) {
         sku,
         reviewsCount,
         attributes,
+        unit,
       },
     });
     return response.status(201).json(product);
@@ -124,6 +126,7 @@ async function updateProduct(request, response) {
       sku,
       reviewsCount,
       attributes,
+      unit,
     } = request.body;
     // Finding a product by slug
     const existingProduct = await prisma.product.findUnique({
@@ -154,6 +157,7 @@ async function updateProduct(request, response) {
         sku: sku,
         reviewsCount: reviewsCount,
         attributes: attributes,
+        unit: unit,
       },
     });
 

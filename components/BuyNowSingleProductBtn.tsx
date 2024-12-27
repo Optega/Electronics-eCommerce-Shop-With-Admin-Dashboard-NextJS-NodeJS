@@ -25,6 +25,7 @@ const BuyNowSingleProductBtn = ({ product, quantityCount }: SingleProductBtnProp
       price: product?.price,
       image: product?.mainImage,
       amount: quantityCount,
+      unit: product?.unit,
     });
     calculateTotals();
     toast.success("Товар додано до кошика");

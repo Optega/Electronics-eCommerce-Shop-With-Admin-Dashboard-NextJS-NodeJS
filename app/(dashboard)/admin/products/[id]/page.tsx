@@ -5,9 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import toast from "react-hot-toast";
-import {
-  convertCategoryTitleToSlugFriendly as convertSlugToURLFriendly,
-} from "@/utils/categoryFormating";
+import { convertCategoryTitleToSlugFriendly as convertSlugToURLFriendly } from "@/utils/categoryFormating";
 import { nanoid } from "nanoid";
 
 interface DashboardProductDetailsProps {
@@ -220,7 +218,7 @@ const DashboardProductDetails = ({ params: { id } }: DashboardProductDetailsProp
             </div>
             <select
               className="select select-bordered"
-              value={product?.inStock || 1}
+              value={product?.inStock == 0 ? 0 : 1}
               onChange={(e) => {
                 setProduct({ ...product!, inStock: Number(e.target.value) });
               }}
@@ -257,6 +255,22 @@ const DashboardProductDetails = ({ params: { id } }: DashboardProductDetailsProp
           </label>
         </div>
         {/* Product category select input div - end */}
+
+        {/* Product unit input div - start */}
+        <div>
+          <label className="form-control w-full max-w-xs">
+            <div className="label">
+              <span className="label-text">Product unit:</span>
+            </div>
+            <input
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              value={product?.unit || ""}
+              onChange={(e) => setProduct({ ...product!, unit: e.target.value })}
+            />
+          </label>
+        </div>
+        {/* Product unit select input div - end */}
 
         {/* Product sku input div - start */}
         <div>

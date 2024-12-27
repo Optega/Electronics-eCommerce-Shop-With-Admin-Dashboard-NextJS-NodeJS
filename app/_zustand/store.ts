@@ -7,6 +7,7 @@ export type ProductInCart = {
   price: number;
   image: string;
   amount: number;
+  unit: string;
 };
 
 export type State = {

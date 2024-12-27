@@ -9,19 +9,7 @@ import Markdown from "react-markdown";
 
 const AddNewProduct = () => {
   const router = useRouter();
-  const [product, setProduct] = useState<{
-    title: string;
-    price: number;
-    manufacturer: string;
-    inStock: number;
-    mainImage: string;
-    description: string;
-    slug: string;
-    categoryId: string;
-    sku: string;
-    reviewsCount: number;
-    attributes: Attribute[];
-  }>({
+  const [product, setProduct] = useState<Partial<Product>>({
     title: "",
     price: 0,
     manufacturer: "",
@@ -41,11 +29,11 @@ const AddNewProduct = () => {
     if (
       product.title === "" ||
       product.slug === "" ||
-      product.price.toString() === "" ||
+      product.price?.toString() === "" ||
       product.manufacturer === "" ||
       product.description === "" ||
       product.sku === "" ||
-      product.reviewsCount.toString() === ""
+      product.reviewsCount?.toString() === ""
     ) {
       toast.error("Please enter values in input fields");
       return;
@@ -245,6 +233,20 @@ const AddNewProduct = () => {
         <div>
           <label className="form-control w-full max-w-xs">
             <div className="label">
+              <span className="label-text">Product unit:</span>
+            </div>
+            <input
+              type="text"
+              className="input input-bordered w-full max-w-xs"
+              value={product?.unit || ""}
+              onChange={(e) => setProduct({ ...product, unit: e.target.value })}
+            />
+          </label>
+        </div>
+
+        <div>
+          <label className="form-control w-full max-w-xs">
+            <div className="label">
               <span className="label-text">Product SKU:</span>
             </div>
             <input
@@ -337,7 +339,7 @@ const AddNewProduct = () => {
                           onChange={(e) => {
                             setProduct({
                               ...product!,
-                              attributes: product.attributes.map((attr) =>
+                              attributes: product.attributes?.map((attr) =>
                                 attr.name === attribute.name ? { ...attr, name: e.target.value } : attr
                               ),
                             });
@@ -352,7 +354,7 @@ const AddNewProduct = () => {
                           onChange={(e) => {
                             setProduct({
                               ...product!,
-                              attributes: product.attributes.map((attr) =>
+                              attributes: product.attributes?.map((attr) =>
                                 attr.name === attribute.name ? { ...attr, value: e.target.value } : attr
                               ),
                             });
@@ -365,7 +367,7 @@ const AddNewProduct = () => {
                           onClick={() => {
                             setProduct({
                               ...product!,
-                              attributes: product.attributes.filter((attr) => attr.name !== attribute.name),
+                              attributes: product.attributes?.filter((attr) => attr.name !== attribute.name),
                             });
                           }}
                         >
@@ -383,7 +385,7 @@ const AddNewProduct = () => {
                       onClick={() =>
                         setProduct({
                           ...product,
-                          attributes: [...product.attributes, { name: "", value: "" }],
+                          attributes: [...product.attributes!, { name: "", value: "" }],
                         })
                       }
                     >

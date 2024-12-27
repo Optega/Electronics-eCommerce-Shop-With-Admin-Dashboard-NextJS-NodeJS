@@ -17,6 +17,7 @@ interface Product {
   sku: string;
   reviewsCount: number;
   attributes: Attribute[];
+  unit: string;
 }
 
 interface SingleProductPageProps {
