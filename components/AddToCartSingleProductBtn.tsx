@@ -13,10 +13,7 @@ import React from "react";
 import { useProductStore } from "@/app/_zustand/store";
 import toast from "react-hot-toast";
 
-const AddToCartSingleProductBtn = ({
-  product,
-  quantityCount,
-}: SingleProductBtnProps) => {
+const AddToCartSingleProductBtn = ({ product, quantityCount }: SingleProductBtnProps) => {
   const { addToCart, calculateTotals } = useProductStore();
 
   const handleAddToCart = () => {
@@ -28,7 +25,7 @@ const AddToCartSingleProductBtn = ({
       amount: quantityCount,
     });
     calculateTotals();
-    toast.success("Product added to the cart");
+    toast.success("Товар додано до кошика");
   };
   return (
     <button

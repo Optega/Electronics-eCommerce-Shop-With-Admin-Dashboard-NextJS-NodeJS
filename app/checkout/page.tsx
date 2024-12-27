@@ -13,7 +13,7 @@ import {
   isValidNameOrLastname,
 } from "@/lib/utils";
 
-const SHIPMENT_PRICE = 85;
+const SHIPMENT_PRICE = 110;
 
 const CheckoutPage = () => {
   const [checkoutForm, setCheckoutForm] = useState({
@@ -78,9 +78,7 @@ const CheckoutPage = () => {
       }
 
       if (!isValidCreditCardExpirationDate(checkoutForm.expirationDate)) {
-        toast.error(
-          "You entered invalid format for credit card expiration date"
-        );
+        toast.error("You entered invalid format for credit card expiration date");
         return;
       }
 
@@ -149,26 +147,19 @@ const CheckoutPage = () => {
     }
   };
 
-  const addOrderProduct = async (
-    orderId: string,
-    productId: string,
-    productQuantity: number
-  ) => {
+  const addOrderProduct = async (orderId: string, productId: string, productQuantity: number) => {
     // sending API POST request for the table customer_order_product that does many to many relatioship for order and product
-    const response = await fetch(
-      `${process.env.BACKEND_URL}/api/order-product`,
-      {
-        method: "POST", // or 'PUT'
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          customerOrderId: orderId,
-          productId: productId,
-          quantity: productQuantity,
-        }),
-      }
-    );
+    const response = await fetch(`${process.env.BACKEND_URL}/api/order-product`, {
+      method: "POST", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        customerOrderId: orderId,
+        productId: productId,
+        quantity: productQuantity,
+      }),
+    });
   };
 
   useEffect(() => {
@@ -182,14 +173,8 @@ const CheckoutPage = () => {
     <div className="bg-white">
       <SectionTitle title="Оплата" />
       {/* Background color split screen for large screens */}
-      <div
-        className="hidden h-full w-1/2 bg-white lg:block"
-        aria-hidden="true"
-      />
-      <div
-        className="hidden h-full w-1/2 bg-gray-50 lg:block"
-        aria-hidden="true"
-      />
+      <div className="hidden h-full w-1/2 bg-white lg:block" aria-hidden="true" />
+      <div className="hidden h-full w-1/2 bg-gray-50 lg:block" aria-hidden="true" />
 
       <main className="relative mx-auto grid max-w-screen-2xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 xl:gap-x-48">
         <h1 className="sr-only">Іноформація про замовлення</h1>
@@ -199,28 +184,15 @@ const CheckoutPage = () => {
           className="bg-gray-50 px-4 pb-10 pt-16 sm:px-6 lg:col-start-2 lg:row-start-1 lg:bg-transparent lg:px-0 lg:pb-16"
         >
           <div className="mx-auto max-w-lg lg:max-w-none">
-            <h2
-              id="summary-heading"
-              className="text-lg font-medium text-gray-900"
-            >
+            <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
               Іноформація про замовлення
             </h2>
 
-            <ul
-              role="list"
-              className="divide-y divide-gray-200 text-sm font-medium text-gray-900"
-            >
+            <ul role="list" className="divide-y divide-gray-200 text-sm font-medium text-gray-900">
               {products.map((product) => (
-                <li
-                  key={product?.id}
-                  className="flex items-start space-x-4 py-6"
-                >
+                <li key={product?.id} className="flex items-start space-x-4 py-6">
                   <Image
-                    src={
-                      product?.image
-                        ? `/${product?.image}`
-                        : "/product_placeholder.jpg"
-                    }
+                    src={"/images/products" + (product?.image ? `/${product?.image}` : "/product_placeholder.jpg")}
                     alt={product?.title}
                     width={80}
                     height={80}
@@ -230,9 +202,7 @@ const CheckoutPage = () => {
                     <h3>{product?.title}</h3>
                     <p className="text-gray-500">x{product?.amount}</p>
                   </div>
-                  <p className="flex-none text-base font-medium">
-                    ₴{product?.price}
-                  </p>
+                  <p className="flex-none text-base font-medium">₴{product?.price}</p>
                   <p></p>
                 </li>
               ))}
@@ -241,7 +211,7 @@ const CheckoutPage = () => {
             <dl className="hidden space-y-6 border-t border-gray-200 pt-6 text-sm font-medium text-gray-900 lg:block">
               <div className="flex items-center justify-between">
                 <dt className="text-gray-600">Сума</dt>
-                <dd>${total}</dd>
+                <dd>₴{total}</dd>
               </div>
 
               <div className="flex items-center justify-between">
@@ -252,14 +222,12 @@ const CheckoutPage = () => {
               {/* 
               <div className="flex items-center justify-between">
                 <dt className="text-gray-600">Taxes</dt>
-                <dd>${SHIPMENT_PRICE}</dd>
+                <dd>₴{SHIPMENT_PRICE}</dd>
               </div> */}
 
               <div className="flex items-center justify-between border-t border-gray-200 pt-6">
                 <dt className="text-base">Загальна сума</dt>
-                <dd className="text-base">
-                  ₴{total === 0 ? 0 : Math.round(total + SHIPMENT_PRICE)}
-                </dd>
+                <dd className="text-base">₴{total === 0 ? 0 : Math.round(total + SHIPMENT_PRICE)}</dd>
               </div>
             </dl>
           </div>
@@ -268,18 +236,12 @@ const CheckoutPage = () => {
         <form className="px-4 pt-16 sm:px-6 lg:col-start-1 lg:row-start-1 lg:px-0">
           <div className="mx-auto max-w-lg lg:max-w-none">
             <section aria-labelledby="contact-info-heading">
-              <h2
-                id="contact-info-heading"
-                className="text-lg font-medium text-gray-900"
-              >
+              <h2 id="contact-info-heading" className="text-lg font-medium text-gray-900">
                 Контактна інформація
               </h2>
 
               <div className="mt-6">
-                <label
-                  htmlFor="name-input"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="name-input" className="block text-sm font-medium text-gray-700">
                   Ім`я
                 </label>
                 <div className="mt-1">
@@ -301,10 +263,7 @@ const CheckoutPage = () => {
               </div>
 
               <div className="mt-6">
-                <label
-                  htmlFor="lastname-input"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="lastname-input" className="block text-sm font-medium text-gray-700">
                   Прізвище
                 </label>
                 <div className="mt-1">
@@ -326,10 +285,7 @@ const CheckoutPage = () => {
               </div>
 
               <div className="mt-6">
-                <label
-                  htmlFor="phone-input"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="phone-input" className="block text-sm font-medium text-gray-700">
                   Номер телефону
                 </label>
                 <div className="mt-1">
@@ -351,10 +307,7 @@ const CheckoutPage = () => {
               </div>
 
               <div className="mt-6">
-                <label
-                  htmlFor="email-address"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="email-address" className="block text-sm font-medium text-gray-700">
                   Email адреса
                 </label>
                 <div className="mt-1">
@@ -377,19 +330,13 @@ const CheckoutPage = () => {
             </section>
 
             <section aria-labelledby="payment-heading" className="mt-10">
-              <h2
-                id="payment-heading"
-                className="text-lg font-medium text-gray-900"
-              >
+              <h2 id="payment-heading" className="text-lg font-medium text-gray-900">
                 Деталі платежу
               </h2>
 
               <div className="mt-6 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4">
                 <div className="col-span-3 sm:col-span-4">
-                  <label
-                    htmlFor="name-on-card"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="name-on-card" className="block text-sm font-medium text-gray-700">
                     Ім`я на картці
                   </label>
                   <div className="mt-1">
@@ -411,10 +358,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="col-span-3 sm:col-span-4">
-                  <label
-                    htmlFor="card-number"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="card-number" className="block text-sm font-medium text-gray-700">
                     Номер картки
                   </label>
                   <div className="mt-1">
@@ -436,10 +380,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="col-span-2 sm:col-span-3">
-                  <label
-                    htmlFor="expiration-date"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="expiration-date" className="block text-sm font-medium text-gray-700">
                     Дійсна до (MM/YY)
                   </label>
                   <div className="mt-1">
@@ -461,10 +402,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="cvc"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="cvc" className="block text-sm font-medium text-gray-700">
                     CVC | CVV
                   </label>
                   <div className="mt-1">
@@ -488,19 +426,13 @@ const CheckoutPage = () => {
             </section>
 
             <section aria-labelledby="shipping-heading" className="mt-10">
-              <h2
-                id="shipping-heading"
-                className="text-lg font-medium text-gray-900"
-              >
+              <h2 id="shipping-heading" className="text-lg font-medium text-gray-900">
                 Адреса доставки
               </h2>
 
               <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-3">
                 <div className="sm:col-span-3">
-                  <label
-                    htmlFor="company"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="company" className="block text-sm font-medium text-gray-700">
                     Компанія
                   </label>
                   <div className="mt-1">
@@ -521,10 +453,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="sm:col-span-3">
-                  <label
-                    htmlFor="address"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                     Адреса
                   </label>
                   <div className="mt-1">
@@ -546,10 +475,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="sm:col-span-3">
-                  <label
-                    htmlFor="apartment"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="apartment" className="block text-sm font-medium text-gray-700">
                     Квартира, дім, офіс
                   </label>
                   <div className="mt-1">
@@ -570,10 +496,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="city"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="city" className="block text-sm font-medium text-gray-700">
                     Місто
                   </label>
                   <div className="mt-1">
@@ -595,10 +518,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="region"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="region" className="block text-sm font-medium text-gray-700">
                     Країна
                   </label>
                   <div className="mt-1">
@@ -620,10 +540,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="postal-code"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="postal-code" className="block text-sm font-medium text-gray-700">
                     Поштовий індекс
                   </label>
                   <div className="mt-1">
@@ -645,10 +562,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="sm:col-span-3">
-                  <label
-                    htmlFor="order-notice"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="order-notice" className="block text-sm font-medium text-gray-700">
                     Коментар до замовлення
                   </label>
                   <div className="mt-1">

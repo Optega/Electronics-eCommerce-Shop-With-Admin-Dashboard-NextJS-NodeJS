@@ -31,9 +31,7 @@ export const useProductStore = create<State & Actions>()(
       total: 0,
       addToCart: (newProduct) => {
         set((state) => {
-          const cartItem = state.products.find(
-            (item) => item.id === newProduct.id
-          );
+          const cartItem = state.products.find((item) => item.id === newProduct.id);
           if (!cartItem) {
             return { products: [...state.products, newProduct] };
           } else {
@@ -48,7 +46,6 @@ export const useProductStore = create<State & Actions>()(
       },
       clearCart: () => {
         set((state: any) => {
-          
           return {
             products: [],
             allQuantity: 0,
@@ -58,9 +55,7 @@ export const useProductStore = create<State & Actions>()(
       },
       removeFromCart: (id) => {
         set((state) => {
-          state.products = state.products.filter(
-            (product: ProductInCart) => product.id !== id
-          );
+          state.products = state.products.filter((product: ProductInCart) => product.id !== id);
           return { products: state.products };
         });
       },

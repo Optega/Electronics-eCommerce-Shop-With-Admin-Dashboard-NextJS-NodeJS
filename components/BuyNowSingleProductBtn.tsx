@@ -14,10 +14,7 @@ import React from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-const BuyNowSingleProductBtn = ({
-  product,
-  quantityCount,
-}: SingleProductBtnProps) => {
+const BuyNowSingleProductBtn = ({ product, quantityCount }: SingleProductBtnProps) => {
   const router = useRouter();
   const { addToCart, calculateTotals } = useProductStore();
 
@@ -30,7 +27,7 @@ const BuyNowSingleProductBtn = ({
       amount: quantityCount,
     });
     calculateTotals();
-    toast.success("Product added to the cart");
+    toast.success("Товар додано до кошика");
     router.push("/checkout");
   };
   return (
