@@ -16,11 +16,12 @@ import { FaMinus } from "react-icons/fa6";
 
 interface QuantityInputProps {
   unit?: string;
+  price: number;
   quantityCount: number;
   setQuantityCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const QuantityInput = ({ unit = "Кількість", quantityCount, setQuantityCount }: QuantityInputProps) => {
+const QuantityInput = ({ unit = "Кількість", price, quantityCount, setQuantityCount }: QuantityInputProps) => {
   const handleQuantityChange = (actionName: string): void => {
     if (actionName === "plus") {
       setQuantityCount(quantityCount + 1);
@@ -30,34 +31,37 @@ const QuantityInput = ({ unit = "Кількість", quantityCount, setQuantity
   };
 
   return (
-    <div className="flex items-center gap-x-4 max-[500px]:justify-center">
-      <p className="text-xl">{unit}: </p>
+    <div className="flex flex-col items-start gap-1 justify-center">
+      <div className="flex items-center gap-x-4 max-[500px]:justify-center">
+        <p className="text-xl">{unit}: </p>
 
-      <div className="flex items-center gap-1">
-        <button
-          type="button"
-          className="size-10 leading-10 text-gray-600 transition hover:opacity-75 flex justify-center items-center border"
-          onClick={() => handleQuantityChange("minus")}
-        >
-          <FaMinus />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            className="size-10 leading-10 text-gray-600 transition hover:opacity-75 flex justify-center items-center border"
+            onClick={() => handleQuantityChange("minus")}
+          >
+            <FaMinus />
+          </button>
 
-        <input
-          type="number"
-          id="Quantity"
-          disabled={true}
-          value={quantityCount}
-          className="h-10 w-24 rounded border-gray-200 sm:text-sm"
-        />
+          <input
+            type="number"
+            id="Quantity"
+            disabled={true}
+            value={quantityCount}
+            className="h-10 w-20 rounded border-gray-200 sm:text-sm"
+          />
 
-        <button
-          type="button"
-          className="size-10 leading-10 text-gray-600 transition hover:opacity-75 flex justify-center items-center border"
-          onClick={() => handleQuantityChange("plus")}
-        >
-          <FaPlus />
-        </button>
+          <button
+            type="button"
+            className="size-10 leading-10 text-gray-600 transition hover:opacity-75 flex justify-center items-center border"
+            onClick={() => handleQuantityChange("plus")}
+          >
+            <FaPlus />
+          </button>
+        </div>
       </div>
+      <p className="text-lg">Сума: ₴{quantityCount * price}</p>
     </div>
   );
 };
