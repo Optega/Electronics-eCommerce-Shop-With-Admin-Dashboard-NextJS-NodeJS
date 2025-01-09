@@ -1,8 +1,8 @@
 version: "3.8"
 
 services:
-  frontend:
-    container_name: frontend
+  radiotech-frontend:
+    container_name: radiotech-frontend
     build: .
     ports:
       - "3002:3000"
