@@ -24,10 +24,25 @@ interface QuantityInputProps {
 const QuantityInput = ({ unit = "Кількість", price, quantityCount, setQuantityCount }: QuantityInputProps) => {
   const handleQuantityChange = (actionName: string): void => {
     if (actionName === "plus") {
-      setQuantityCount(quantityCount + 1);
-    } else if (actionName === "minus" && quantityCount !== 1) {
+      setQuantityCount(Number(quantityCount) + 1);
+    } else if (actionName === "minus" && quantityCount > 1) {
       setQuantityCount(quantityCount - 1);
     }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    let value = e.target.value;
+
+    if (value === "0" || Number(value) < 0) {
+      setQuantityCount(0);
+      return;
+    }
+
+    value = value.replace(/^0+/, "");
+
+    e.target.value = value;
+
+    setQuantityCount(Number(value));
   };
 
   return (
@@ -38,6 +53,7 @@ const QuantityInput = ({ unit = "Кількість", price, quantityCount, setQ
         <div className="flex items-center gap-1">
           <button
             type="button"
+            disabled={quantityCount < 1}
             className="size-10 leading-10 text-gray-600 transition hover:opacity-75 flex justify-center items-center border"
             onClick={() => handleQuantityChange("minus")}
           >
@@ -47,9 +63,9 @@ const QuantityInput = ({ unit = "Кількість", price, quantityCount, setQ
           <input
             type="number"
             id="Quantity"
-            disabled={true}
             value={quantityCount}
-            className="h-10 w-20 rounded border-gray-200 sm:text-sm"
+            onChange={handleInputChange}
+            className="h-10 w-20 rounded border-gray-200 sm:text-sm input-no-arrows"
           />
 
           <button

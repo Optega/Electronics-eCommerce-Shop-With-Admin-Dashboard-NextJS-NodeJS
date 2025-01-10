@@ -17,6 +17,11 @@ const AddToCartSingleProductBtn = ({ product, quantityCount }: SingleProductBtnP
   const { addToCart, calculateTotals } = useProductStore();
 
   const handleAddToCart = () => {
+    if (quantityCount < 1) {
+      toast.error("Кількість товару повинна бути більше 0");
+      return;
+    }
+
     addToCart({
       id: product?.id.toString(),
       title: product?.title,
