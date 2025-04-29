@@ -11,7 +11,7 @@ async function getAllProducts(request, response) {
 
   // Переконатися, що ці фільтри існують
   const parsedPage = parseInt(page, 10) || 1;
-  const parsedLimit = parseInt(limit, 10) || 12;
+  const parsedLimit = parseInt(limit, 10) || undefined;
   const parsedSort = sort || "defaultSort";
   const parsedPrice = parseInt(price, 10) || 0;
   const parsedRating = parseInt(rating, 10) || 0;
@@ -54,7 +54,7 @@ async function getAllProducts(request, response) {
   try {
     const products = await prisma.product.findMany({
       where: whereClause,
-      skip: (parsedPage - 1) * parsedLimit, // Для пагінації
+      skip: parsedLimit ? (parsedPage - 1) * parsedLimit : undefined, // Для пагінації
       take: parsedLimit,
       orderBy: sortObj,
       include: {
