@@ -1,26 +1,29 @@
-# Використовуємо офіційний образ Node.js
-FROM node:18-alpine
+# Використовуємо Debian-базу, а не Alpine
+FROM node:18-slim
 
-# Встановлюємо робочу директорію
+# Встановлюємо залежності OpenSSL
+RUN apt-get update && apt-get install -y openssl libssl-dev ca-certificates && rm -rf /var/lib/apt/lists/*
+
+# Робоча директорія
 WORKDIR /app
 
-# Копіюємо package.json і package-lock.json для встановлення залежностей
+# Копіюємо залежності
 COPY package*.json ./
 
 # Встановлюємо залежності
 RUN npm ci
 
-# Копіюємо решту коду додатку
+# Копіюємо весь код
 COPY . .
 
-# Генеруємо Prisma клієнт (якщо необхідно)
+# Генеруємо Prisma клієнт
 RUN npx prisma generate
 
-# Будуємо додаток
+# Білдимо застосунок
 RUN npm run build
 
-# Відкриваємо порт для фронтенду
+# Порт
 EXPOSE 3002
 
-# Запускаємо додаток
+# Запуск
 CMD ["npm", "start"]
