@@ -1,32 +1,26 @@
-# Використовуємо Alpine Node.js
+# Використовуємо офіційний образ Node.js
 FROM node:18-alpine
 
-# Додаємо openssl 1.1, який потрібен Prisma
-RUN apk add --no-cache openssl1.1
-
-# Робоча директорія
+# Встановлюємо робочу директорію
 WORKDIR /app
 
-# Копіюємо залежності
+# Копіюємо package.json і package-lock.json для встановлення залежностей
 COPY package*.json ./
 
 # Встановлюємо залежності
 RUN npm ci
 
-# Копіюємо весь код
+# Копіюємо решту коду додатку
 COPY . .
 
-# Генеруємо Prisma клієнт
+# Генеруємо Prisma клієнт (якщо необхідно)
 RUN npx prisma generate
 
-# (Опційно) Деплой міграцій — якщо хочеш це в продакшн
-RUN npx prisma migrate deploy
-
-# Будуємо застосунок
+# Будуємо додаток
 RUN npm run build
 
-# Відкриваємо порт
+# Відкриваємо порт для фронтенду
 EXPOSE 3002
 
-# Запуск
+# Запускаємо додаток
 CMD ["npm", "start"]
